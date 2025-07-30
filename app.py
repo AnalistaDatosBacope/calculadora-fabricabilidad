@@ -443,15 +443,22 @@ def index():
         # Procesar archivo de Historico Costos
         historico_costos_file = request.files.get('historico_costos_file')
         if historico_costos_file and historico_costos_file.filename != '':
+            logging.info(f"DEBUG: Procesando archivo histórico de costos: {historico_costos_file.filename}")
             try:
                 parsed_data = parser.parse_file(historico_costos_file, 'historico_costos_file')
+                logging.info(f"DEBUG: Datos parseados: {type(parsed_data)}, shape: {parsed_data.shape if hasattr(parsed_data, 'shape') else 'N/A'}")
                 if parsed_data is not None and isinstance(parsed_data, pd.DataFrame):
                     data_filename = f"{session_id}_historico_costos_df.feather"
                     data_path = os.path.join(app.config['DATA_CACHE_FOLDER'], data_filename)
                     parsed_data.reset_index(drop=True).to_feather(data_path)
                     session_data['historico_costos_df'] = data_path
+                    logging.info(f"DEBUG: Archivo guardado en: {data_path}")
                     flash(f'Archivo "{historico_costos_file.filename}" procesado correctamente.', 'success')
+                else:
+                    logging.error(f"DEBUG: parsed_data no es DataFrame: {type(parsed_data)}")
+                    flash(f'Error: El archivo "{historico_costos_file.filename}" no contiene datos válidos.', 'danger')
             except Exception as e:
+                logging.error(f"DEBUG: Error procesando histórico de costos: {e}")
                 flash(f'Error inesperado al procesar el archivo "{historico_costos_file.filename}": {e}', 'danger')
 
         session['calculadora_core'] = session_data
@@ -506,6 +513,11 @@ def index():
         'current_year': datetime.now().year, # Pasa el año actual a la plantilla
         'active_section': section # Pasa la sección activa a la plantilla
     }
+    
+    # Debug: Log del estado de los archivos
+    logging.info(f"DEBUG: Estado de archivos en sesión: {list(calculadora_data_raw.keys())}")
+    logging.info(f"DEBUG: historico_costos_loaded: {'historico_costos_df' in calculadora_data_raw}")
+    logging.info(f"DEBUG: Context completo: {context}")
     return render_template('index.html', **context)
 
 # --- NUEVAS RUTAS DE RESULTADOS ---
