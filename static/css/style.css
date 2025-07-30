@@ -1,0 +1,2037 @@
+/* static/css/style.css */
+
+/* Importa la fuente Inter de Google Fonts (ya en HTML, pero se mantiene aquí por si acaso) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* Definición de variables CSS para colores (para consistencia y fácil cambio) */
+:root {
+    --bg-dark-blue: #1a1a2e; /* Very deep dark blue */
+    --card-bg-dark-blue: #2a2a4a; /* A lighter shade of dark blue for cards */
+    --card-header-blue: #3e3e70; /* A more vibrant blue for card headers */
+    --text-light-gray: #e0e0e0; /* Light gray for main text */
+    --heading-white: #ffffff; /* White for headings */
+    --input-bg-dark: #3a3a5a; /* Darker background for inputs */
+    --input-border-gray: #5a5a7a;
+    --input-focus-bg: #4a4a6a;
+    --input-focus-border: #8c8cd9;
+    --input-placeholder-gray: #a0a0a0;
+    --label-text-color: #c0c0c0; /* A slightly darker gray for labels */
+
+    --btn-primary-bg: #6a6ad9;
+    --btn-primary-border: #6a6ad9;
+    --btn-primary-hover-bg: #5a5ac9;
+    --btn-primary-hover-border: #5a5ac9;
+}
+
+/* Estilos generales del cuerpo */
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(135deg, #004173 0%, #0979b0 100%);
+    min-height: 100vh;
+    color: #222;
+}
+
+/* Contenedor principal (ya manejado por Tailwind mx-auto p-6) */
+.container {
+    max-width: 1200px; /* Limita el ancho máximo para mejor legibilidad */
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+.sidebar {
+    background: rgba(0, 65, 115, 0.98);
+    min-height: 100vh;
+    color: #fff;
+    box-shadow: 2px 0 16px rgba(0,0,0,0.07);
+    transition: box-shadow 0.3s;
+}
+
+.sidebar .nav-link {
+    color: #7cdaf9;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.sidebar .nav-link.active, .sidebar .nav-link:hover {
+    background: #0cb7f2;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(12,183,242,0.10);
+}
+
+.sidebar .nav-link .bi {
+    color: #7cdaf9;
+    font-size: 1.3rem;
+    transition: color 0.2s;
+}
+
+.section-tab {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 1.2rem;
+    box-shadow: 0 4px 24px rgba(0,65,115,0.10);
+    border: none;
+    margin-bottom: 2.5rem;
+    padding: 2.2rem 2rem 2rem 2rem;
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+.card:hover {
+    box-shadow: 0 8px 32px rgba(0,65,115,0.16);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.card-header {
+    background: linear-gradient(90deg, #004173 60%, #0979b0 100%);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 1.2rem 1.2rem 0 0;
+    font-size: 1.18rem;
+    padding: 1.1rem 2rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(12,183,242,0.07);
+}
+
+.btn-primary, .btn-success, .btn-info {
+    background: linear-gradient(90deg, #0cb7f2 60%, #0979b0 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-info:hover {
+    background: #004173;
+    color: #fff;
+}
+
+.alert-info {
+    background: #7cdaf9;
+    color: #004173;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    border-radius: 0.7rem;
+    box-shadow: 0 2px 8px rgba(12,183,242,0.07);
+}
+
+h1, h2, h3, h4, h5 {
+    color: #004173;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Header superior */
+.header-bar {
+    background: #004173;
+    color: #fff;
+    padding: 1.2rem 2rem 1.2rem 2.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 0 0 1.2rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,65,115,0.10);
+}
+
+/* Mejorar visibilidad del header y elementos del login */
+.header-bar * {
+    color: #ffffff !important;
+}
+
+.header-bar .btn-outline-light {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.header-bar .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: #ffffff !important;
+}
+
+/* Forzar texto blanco en el botón de login */
+.header-bar button,
+.header-bar .btn,
+.header-bar .btn-outline-light,
+.header-bar .btn-outline-light *,
+.header-bar .dropdown-toggle,
+.header-bar .dropdown-toggle * {
+    color: #ffffff !important;
+}
+
+/* Asegurar que el texto del botón sea blanco */
+.header-bar .btn-outline-light span,
+.header-bar .btn-outline-light i,
+.header-bar .btn-outline-light .bi {
+    color: #ffffff !important;
+}
+
+.header-bar .dropdown-menu {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.header-bar .dropdown-item {
+    color: #333333 !important;
+}
+
+.header-bar .dropdown-item:hover {
+    background-color: #f8f9fa !important;
+    color: #333333 !important;
+}
+
+.header-bar .dropdown-item-text {
+    color: #666666 !important;
+}
+
+.header-bar .dropdown-divider {
+    border-color: #e9ecef !important;
+}
+
+/* Mejorar inputs */
+.form-control:focus {
+    border-color: #0cb7f2;
+    box-shadow: 0 0 0 0.2rem rgba(12,183,242,0.15);
+}
+
+/* Estilos de tarjetas (ya manejado por Tailwind rounded-xl shadow-lg p-6) */
+.card {
+    background-color: var(--card-bg-dark-blue);
+    border: none;
+    position: relative; /* Necesario para el overlay */
+}
+
+.card-header {
+    background-color: var(--card-header-blue);
+    color: var(--heading-white);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem 0.75rem 0 0; /* Bordes redondeados solo arriba */
+    font-weight: 600;
+}
+
+/* Estilos de inputs y selects */
+.form-input, .form-select {
+    background-color: var(--input-bg-dark);
+    border: 1px solid var(--input-border-gray);
+    color: var(--text-light-gray);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem; /* rounded-lg en Tailwind */
+    transition: all 0.2s ease-in-out;
+}
+
+.form-input::placeholder {
+    color: var(--input-placeholder-gray);
+}
+
+.form-input:focus, .form-select:focus {
+    background-color: var(--input-focus-bg);
+    border-color: var(--input-focus-border);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(140, 140, 217, 0.3); /* Sombra de foco */
+}
+
+.form-select {
+    appearance: none; /* Elimina estilos nativos del select */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23a0a0a0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 0.8em 0.8em;
+    padding-right: 2.5rem; /* Espacio para la flecha */
+}
+
+/* Estilos para Select2 (personalización para que se vea como los otros inputs) */
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    background-color: var(--input-bg-dark) !important;
+    border: 1px solid var(--input-border-gray) !important;
+    border-radius: 0.5rem !important;
+    height: auto !important; /* Permitir que el alto se ajuste al contenido */
+    min-height: 44px; /* Altura mínima para coincidir con inputs */
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.25rem 0.75rem !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    color: var(--text-light-gray) !important;
+    line-height: normal !important; /* Ajustar line-height */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Permitir que los tags se envuelvan */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: var(--input-placeholder-gray) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    right: 0.75rem !important;
+    width: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: var(--input-placeholder-gray) transparent transparent transparent !important;
+    border-width: 6px 4px 0 4px !important;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent var(--input-placeholder-gray) transparent !important;
+    border-width: 0 4px 6px 4px !important;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: var(--input-bg-dark) !important;
+    border: 1px solid var(--input-border-gray) !important;
+    color: var(--text-light-gray) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.select2-container--default .select2-results__option {
+    padding: 0.75rem 1rem !important;
+    color: var(--text-light-gray) !important;
+    background-color: var(--card-bg-dark-blue) !important;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: var(--input-focus-bg) !important;
+    color: var(--heading-white) !important;
+}
+
+.select2-container--default .select2-results__option--selected {
+    background-color: rgba(140, 140, 217, 0.2) !important; /* Un fondo más sutil para seleccionados */
+    color: var(--text-light-gray) !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #5a5ac9 !important; /* Color de la pastilla de selección */
+    border: 1px solid #6a6ad9 !important;
+    color: white !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 0.375rem !important; /* rounded-md */
+    margin: 0.25rem !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: white !important;
+    float: right !important;
+    margin-left: 0.5rem !important;
+    font-weight: bold !important;
+}
+
+.select2-dropdown {
+    background-color: var(--card-bg-dark-blue) !important;
+    border: 1px solid var(--input-border-gray) !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Estilos para los iconos de estado de carga de archivos */
+.file-input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espacio entre input y el icono */
+    margin-bottom: 1rem;
+}
+
+.file-input-group label {
+    flex-shrink: 0; /* Evita que la etiqueta se encoja */
+    min-width: 120px; /* Ancho fijo para las etiquetas */
+}
+
+.file-input-field {
+    flex-grow: 1; /* Permite que el input ocupe el espacio restante */
+}
+
+.file-status-icon {
+    font-size: 1.5rem; /* Tamaño del icono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; /* Ancho fijo para el icono */
+    height: 24px; /* Alto fijo para el icono */
+    flex-shrink: 0; /* Evita que el icono se encoja */
+}
+
+/* Estilos para overlay de secciones deshabilitadas */
+.disabled-form-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* Overlay más oscuro y visible */
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 0.75rem; /* Coincide con el redondeo de la tarjeta */
+    text-align: center;
+    padding: 20px;
+    opacity: 0; /* Por defecto invisible */
+    pointer-events: none; /* No intercepta eventos de ratón por defecto */
+    transition: opacity 0.3s ease;
+}
+
+.card.form-card.disabled {
+    pointer-events: none; /* Deshabilita clicks en toda la tarjeta cuando está deshabilitada */
+    filter: grayscale(80%); /* Hace la tarjeta en blanco y negro */
+    opacity: 0.7; /* Reduce la opacidad */
+}
+
+.card.form-card.disabled .disabled-form-overlay {
+    opacity: 1; /* Hace el overlay visible cuando la tarjeta está deshabilitada */
+    pointer-events: auto; /* Intercepta clicks cuando el overlay es visible */
+}
+
+/* Ocultar el contenido de la tarjeta cuando está deshabilitada, excepto el header y el overlay */
+.card.form-card.disabled > *:not(.card-header):not(.disabled-form-overlay) {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilos para las alertas (flash messages) */
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.alert-success {
+    background-color: #10B981; /* Tailwind green-500 */
+    color: white;
+}
+
+.alert-danger {
+    background-color: #EF4444; /* Tailwind red-500 */
+    color: white;
+}
+
+.alert-warning {
+    background-color: #F59E0B; /* Tailwind amber-500 */
+    color: white;
+}
+
+.alert .close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.alert .close:hover {
+    opacity: 1;
+}
+
+/* Estilos para las cajas de valores en los resultados */
+.value-box {
+    background-color: var(--input-bg-dark); /* Color de fondo oscuro */
+    border-radius: 0.75rem; /* Bordes redondeados */
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+}
+
+.value-box h3 {
+    font-size: 2.5rem; /* Tamaño grande para el número */
+    font-weight: 700;
+    color: var(--heading-white);
+    margin-bottom: 0.5rem;
+}
+
+.value-box p {
+    font-size: 1rem;
+    color: var(--label-text-color);
+}
+
+/* Estilos de tabla */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: var(--text-light-gray);
+    border-collapse: collapse; /* Para bordes limpios */
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--card-header-blue); /* Fondo para encabezados */
+    color: var(--heading-white);
+}
+
+.table-dark thead th {
+    background-color: var(--card-header-blue);
+    color: var(--heading-white);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.1); /* Ligeramente más oscuro para filas impares */
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Resaltar al pasar el ratón */
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Estilos para Chart.js container */
+.chart-container {
+    position: relative;
+    height: 400px; /* Altura fija para el gráfico */
+    width: 100%;
+}
+
+/* Footer */
+footer {
+    background-color: var(--card-bg-dark-blue);
+    color: var(--label-text-color);
+}
+
+.card label {
+    color: #7cdaf9 !important;
+    font-weight: 700;
+    font-size: 1.08rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.2px;
+}
+
+.card .form-group {
+    margin-bottom: 2rem !important;
+}
+
+.card .form-control {
+    background: #fafdff;
+    color: #004173;
+    border: 1.5px solid #0cb7f2;
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.7rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card .form-control:focus {
+    border-color: #0979b0;
+    box-shadow: 0 0 0 0.18rem rgba(12,183,242,0.13);
+    background: #f4faff;
+}
+
+.card .form-text, .card small {
+    color: #b6f0ff !important;
+    font-size: 1rem;
+    margin-top: 0.7rem !important;
+    display: block;
+    font-weight: 600;
+}
+
+.card .badge, .badge {
+    font-size: 1.05rem;
+    border-radius: 1rem;
+    padding: 0.45em 1.2em;
+    font-weight: 700;
+    margin-left: 0.7em;
+    vertical-align: middle;
+    box-shadow: 0 1px 6px rgba(12,183,242,0.10);
+    letter-spacing: 0.2px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.badge-success {
+    background: #28a745 !important;
+    color: #fff !important;
+}
+
+.badge-danger {
+    background: #dc3545 !important;
+    color: #fff !important;
+}
+
+.badge-info, .bg-info {
+    background: linear-gradient(90deg, #0cb7f2 60%, #7cdaf9 100%) !important;
+    color: #004173 !important;
+}
+
+.bg-secondary {
+    background: #6c757d !important;
+    color: #fff !important;
+}
+
+.btn, .btn-block {
+    border-radius: 0.7rem;
+    font-weight: 600;
+    font-size: 1.08rem;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 8px rgba(12,183,242,0.07);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover, .btn-success:hover, .btn-info:hover {
+    background: #004173;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0,65,115,0.13);
+}
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+}
+.btn-secondary:hover {
+    background: #004173;
+    color: #fff;
+}
+
+.card .form-control:disabled, .card .form-control[readonly] {
+    background: #e9f6fb;
+    color: #004173;
+}
+
+hr {
+    border: none;
+    border-top: 1.5px solid #e0e7ef;
+    margin: 2rem 0;
+    opacity: 0.7;
+}
+
+/* Chips y filtros */
+.badge.bg-info, .badge.bg-secondary {
+    cursor: pointer;
+    margin-right: 0.5rem;
+    margin-bottom: 0.3rem;
+    padding: 0.6em 1.3em;
+    font-size: 1.08rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 1px 6px rgba(12,183,242,0.10);
+    transition: background 0.2s, color 0.2s;
+}
+.badge.bg-info:hover, .badge.bg-secondary:hover {
+    background: #0979b0 !important;
+    color: #fff !important;
+}
+
+/* Separadores sutiles */
+.section-tab:not(:last-child) {
+    border-bottom: 2px solid #e0e7ef;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+}
+
+/* Loader animado */
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0cb7f2;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+    display: block;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Animaciones de transición */
+.card, .btn, .badge, .form-control, .alert {
+    transition: all 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .header-bar { font-size: 1.1rem; padding: 1rem 1rem; }
+    .card { padding: 1.2rem 0.7rem; }
+    .card-header { padding: 0.8rem 1rem; font-size: 1rem; }
+}
+
+/* Estilos mejorados para Select2 múltiple */
+.select2-container--default .select2-selection--multiple {
+    background-color: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 0.5rem;
+    min-height: 38px;
+    padding: 4px 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select2-container--default .select2-selection--multiple:focus,
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #0cb7f2;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25);
+    outline: none;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #0cb7f2;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 2px 8px;
+    margin: 2px 4px 2px 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff;
+    margin-right: 5px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0.2rem;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding: 0;
+    margin: 0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Estilos para Select2 single (fabricabilidad y costo total) */
+.select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 0.5rem;
+    height: 38px;
+    padding: 4px 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: #0cb7f2;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25);
+    outline: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #495057 !important;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #6c757d !important;
+    font-style: italic;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 20px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #6c757d transparent transparent transparent;
+    border-style: solid;
+    border-width: 5px 4px 0 4px;
+    height: 0;
+    left: 50%;
+    margin-left: -4px;
+    margin-top: -2px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #6c757d transparent;
+    border-width: 0 4px 5px 4px;
+}
+
+/* Estilos para flatpickr */
+.flatpickr-input {
+    background-color: #fff !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 1rem !important;
+    color: #495057 !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.flatpickr-input:focus {
+    border-color: #0cb7f2 !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25) !important;
+    outline: none !important;
+}
+
+.flatpickr-input::placeholder {
+    color: #6c757d !important;
+    opacity: 1 !important;
+}
+
+/* Mejorar la apariencia del dropdown de Select2 */
+.select2-dropdown {
+    border: 2px solid #0cb7f2;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+    z-index: 9999;
+}
+
+.select2-container--default .select2-results__option {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #495057 !important;
+    background-color: #fff;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #0cb7f2 !important;
+    color: #fff !important;
+}
+
+.select2-container--default .select2-results__option--selected {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+
+/* Mejorar la apariencia del campo de búsqueda en Select2 */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 6px 8px;
+    font-size: 0.9rem;
+    color: #495057 !important;
+    background-color: #fff;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    border-color: #0cb7f2;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25);
+    outline: none;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field::placeholder {
+    color: #6c757d !important;
+    opacity: 1;
+}
+
+/* Asegurar que el texto seleccionado sea visible en todos los casos */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #495057 !important;
+    font-weight: 500;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    color: #495057 !important;
+}
+
+/* Estilos para cuando hay una selección activa */
+.select2-container--default .select2-selection--single .select2-selection__rendered[title] {
+    color: #495057 !important;
+    font-weight: 500;
+}
+
+/* Estilos para el texto de búsqueda en múltiple */
+.select2-container--default .select2-selection--multiple .select2-selection__rendered input {
+    color: #495057 !important;
+    background-color: transparent !important;
+}
+
+/* Asegurar que el placeholder sea visible */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #6c757d !important;
+    font-style: italic;
+    opacity: 1 !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #6c757d !important;
+    font-style: italic;
+    opacity: 1 !important;
+}
+
+/* Estilos específicos para el tema bootstrap-5 de Select2 */
+.select2-container--bootstrap-5 .select2-selection--single {
+    background-color: #fff !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 0.5rem !important;
+    height: 38px !important;
+    padding: 4px 8px !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single:focus,
+.select2-container--bootstrap-5.select2-container--focus .select2-selection--single {
+    border-color: #0cb7f2 !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25) !important;
+    outline: none !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    color: #495057 !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-weight: 500 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__placeholder {
+    color: #6c757d !important;
+    font-style: italic !important;
+    opacity: 1 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple {
+    background-color: #fff !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 0.5rem !important;
+    min-height: 38px !important;
+    padding: 4px 8px !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple:focus,
+.select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple {
+    border-color: #0cb7f2 !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25) !important;
+    outline: none !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    background-color: #0cb7f2 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 0.25rem !important;
+    padding: 2px 8px !important;
+    margin: 2px 4px 2px 0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff !important;
+    margin-right: 5px !important;
+    font-weight: bold !important;
+    border: none !important;
+    background: none !important;
+    padding: 0 !important;
+    font-size: 1.1rem !important;
+    line-height: 1 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 0.2rem !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #495057 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__placeholder {
+    color: #6c757d !important;
+    font-style: italic !important;
+    opacity: 1 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered input {
+    color: #495057 !important;
+    background-color: transparent !important;
+}
+
+/* Dropdown para bootstrap-5 */
+.select2-dropdown--bootstrap-5 {
+    border: 2px solid #0cb7f2 !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    background-color: #fff !important;
+    z-index: 9999 !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option {
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+    color: #495057 !important;
+    background-color: #fff !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #0cb7f2 !important;
+    color: #fff !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--selected {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option[aria-selected=true] {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+    border: 1px solid #ced4da !important;
+    border-radius: 0.25rem !important;
+    padding: 6px 8px !important;
+    font-size: 0.9rem !important;
+    color: #495057 !important;
+    background-color: #fff !important;
+}
+
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field:focus {
+    border-color: #0cb7f2 !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 183, 242, 0.25) !important;
+    outline: none !important;
+}
+
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field::placeholder {
+    color: #6c757d !important;
+    opacity: 1 !important;
+}
+
+/* Estilos adicionales para el dropdown del tema bootstrap-5 */
+.select2-dropdown--bootstrap-5 {
+    background-color: #fff !important;
+    border: 2px solid #0cb7f2 !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.select2-results__options--bootstrap-5 {
+    background-color: #fff !important;
+}
+
+.select2-results__option--bootstrap-5 {
+    color: #495057 !important;
+    background-color: #fff !important;
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+}
+
+.select2-results__option--highlighted--bootstrap-5 {
+    background-color: #0cb7f2 !important;
+    color: #fff !important;
+}
+
+.select2-results__option--selected--bootstrap-5 {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+
+/* Forzar estilos para cualquier variación del tema bootstrap-5 */
+[class*="select2-container--bootstrap-5"] .select2-selection--single {
+    background-color: #fff !important;
+    border: 2px solid #e0e0e0 !important;
+    color: #495057 !important;
+}
+
+[class*="select2-container--bootstrap-5"] .select2-selection--single .select2-selection__rendered {
+    color: #495057 !important;
+    font-weight: 500 !important;
+}
+
+[class*="select2-container--bootstrap-5"] .select2-selection--multiple {
+    background-color: #fff !important;
+    border: 2px solid #e0e0e0 !important;
+}
+
+[class*="select2-container--bootstrap-5"] .select2-selection--multiple .select2-selection__rendered {
+    color: #495057 !important;
+}
+
+[class*="select2-dropdown--bootstrap-5"] {
+    background-color: #fff !important;
+    border: 2px solid #0cb7f2 !important;
+}
+
+[class*="select2-results__option--bootstrap-5"] {
+    color: #495057 !important;
+    background-color: #fff !important;
+}
+
+/* Estilos para el Dashboard y KPIs */
+.kpi-card {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+}
+
+.kpi-card .kpi-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.kpi-card .kpi-content h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    line-height: 1;
+}
+
+.kpi-card .kpi-content p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-card .kpi-content small {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+/* Animaciones para los KPIs */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.kpi-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.kpi-card:nth-child(1) { animation-delay: 0.1s; }
+.kpi-card:nth-child(2) { animation-delay: 0.2s; }
+.kpi-card:nth-child(3) { animation-delay: 0.3s; }
+.kpi-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Estilos para los gráficos del dashboard */
+.dashboard-chart {
+    border-radius: 0.8rem;
+    background: rgba(255,255,255,0.05);
+    padding: 1rem;
+}
+
+/* Estilos para las alertas del dashboard */
+#dashboard-alerts .alert {
+    border-radius: 0.8rem;
+    border: none;
+    margin-bottom: 0.5rem;
+}
+
+#dashboard-alerts .alert-info {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    color: #1565c0;
+    border-left: 4px solid #2196f3;
+}
+
+#dashboard-alerts .alert-success {
+    background: linear-gradient(135deg, #21ee21 0%, #acf0ae 100%);
+    color: #2e7d32;
+    border-left: 4px solid #4caf50;
+}
+
+#dashboard-alerts .alert-warning {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    color: #f57c00;
+    border-left: 4px solid #ff9800;
+}
+
+#dashboard-alerts .alert-danger {
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    color: #c62828;
+    border-left: 4px solid #f44336;
+}
+
+/* Responsive para el dashboard */
+@media (max-width: 768px) {
+    .kpi-card {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .kpi-card .kpi-icon {
+        font-size: 2rem;
+    }
+    
+    .kpi-card .kpi-content h3 {
+        font-size: 1.8rem;
+    }
+    
+    .kpi-card .kpi-content p {
+        font-size: 0.8rem;
+    }
+}
+
+/* Efectos de hover mejorados para las tarjetas */
+.card:hover .kpi-card {
+    transform: scale(1.02);
+}
+
+/* Estilos para el botón de actualizar dashboard */
+.btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Animación de carga para los KPIs */
+.kpi-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Estilos para Análisis Avanzado de Ventas */
+.advanced-analysis-card {
+    background: var(--card-bg-dark-blue);
+    border: 1px solid var(--input-border-gray); /* Changed from --card-border-gray to --input-border-gray */
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.advanced-analysis-card .card-header {
+    background: var(--card-header-blue); /* Changed from --card-header-bg to --card-header-blue */
+    border-bottom: 1px solid var(--input-border-gray); /* Changed from --card-border-gray to --input-border-gray */
+    border-radius: 0.75rem 0.75rem 0 0;
+    padding: 1rem 1.5rem;
+}
+
+.advanced-analysis-card .card-body {
+    padding: 1.5rem;
+}
+
+/* Estilos para las pestañas de análisis */
+.nav-tabs {
+    border-bottom: 1px solid var(--input-border-gray);
+    margin-bottom: 1rem;
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-light-gray);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--heading-white);
+    background: rgba(140, 140, 217, 0.1);
+    border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--heading-white);
+    background: var(--btn-primary-bg); /* Changed from --primary-blue to --btn-primary-bg */
+    border-color: var(--btn-primary-bg); /* Changed from --primary-blue to --btn-primary-bg */
+}
+
+.nav-tabs .nav-link i {
+    margin-right: 0.5rem;
+}
+
+/* Estilos para los gráficos de análisis */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 1rem 0;
+}
+
+.chart-container canvas {
+    border-radius: 0.5rem;
+}
+
+/* Estilos para las métricas y resúmenes */
+.analysis-summary {
+    background: var(--card-bg-dark-blue);
+    border: 1px solid var(--input-border-gray); /* Changed from --card-border-gray to --input-border-gray */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.analysis-summary h6 {
+    color: var(--heading-white);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.analysis-summary p {
+    color: var(--text-light-gray);
+    margin-bottom: 0.25rem;
+}
+
+.analysis-summary i {
+    margin-right: 0.5rem;
+}
+
+/* Estilos para los badges de calidad */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+}
+
+.badge.bg-excellent {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-good {
+    background-color: #17a2b8 !important;
+}
+
+.badge.bg-acceptable {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge.bg-low {
+    background-color: #dc3545 !important;
+}
+
+/* Estilos para los botones de análisis */
+.btn-analysis {
+    background: var(--btn-primary-bg); /* Changed from --primary-blue to --btn-primary-bg */
+    border: 1px solid var(--btn-primary-bg); /* Changed from --primary-blue to --btn-primary-bg */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.btn-analysis:hover {
+    background: var(--btn-primary-hover-bg); /* Changed from --primary-blue-hover to --btn-primary-hover-bg */
+    border-color: var(--btn-primary-hover-border); /* Changed from --primary-blue-hover to --btn-primary-hover-border */
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-analysis:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-analysis i {
+    margin-right: 0.5rem;
+}
+
+/* Estilos para los spinners de carga */
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
+
+.spinner-border.text-primary {
+    color: var(--btn-primary-bg) !important; /* Changed from --primary-blue to --btn-primary-bg */
+}
+
+.spinner-border.text-success {
+    color: #28a745 !important;
+}
+
+/* Estilos para las alertas de error */
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #f8d7da;
+}
+
+.alert-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    border: 1px solid rgba(23, 162, 184, 0.3);
+    color: #d1ecf1;
+}
+
+/* Estilos para el contenido de las pestañas */
+.tab-content {
+    padding-top: 1rem;
+}
+
+.tab-pane {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para los gráficos responsivos */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 250px;
+    }
+    
+    .advanced-analysis-card .card-body {
+        padding: 1rem;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-analysis {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8rem;
+        margin-left: 0.25rem;
+    }
+}
+
+/* Estilos para el texto de estado de carga */
+.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.fs-1 {
+    font-size: 3rem !important;
+}
+
+/* Estilos para los iconos de estado */
+.bi-arrow-up-circle {
+    color: #dc3545;
+}
+
+.bi-arrow-down-circle {
+    color: #28a745;
+}
+
+.bi-arrow-up-circle.text-success {
+    color: #28a745 !important;
+}
+
+.bi-arrow-down-circle.text-danger {
+    color: #dc3545 !important;
+}
+
+/* Estilos para textos en tarjetas y resúmenes */
+.kpi-card h3,
+.kpi-card p,
+.kpi-card small {
+    color: #ffffff !important;
+}
+
+.kpi-card small {
+    opacity: 0.9;
+}
+
+/* Estilos para el resumen de estacionalidad */
+#seasonal-summary h6 {
+    color: #ffffff !important;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+#seasonal-summary p {
+    color: #ffffff !important;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+#seasonal-summary .text-primary {
+    color: #ffffff !important;
+}
+
+#seasonal-summary .text-success {
+    color: #ffffff !important;
+}
+
+#seasonal-summary .text-info {
+    color: #ffffff !important;
+}
+
+#seasonal-summary .text-warning {
+    color: #ffffff !important;
+}
+
+/* Estilos para las métricas del modelo */
+#forecast-metrics h6 {
+    color: #ffffff !important;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+#forecast-metrics p {
+    color: #ffffff !important;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+#forecast-metrics .text-primary {
+    color: #ffffff !important;
+}
+
+#forecast-metrics .text-success {
+    color: #ffffff !important;
+}
+
+#forecast-metrics .text-info {
+    color: #ffffff !important;
+}
+
+/* Estilos para el resumen estadístico */
+#sales-summary h4,
+#sales-summary h6,
+#sales-summary p,
+#sales-summary strong {
+    color: #ffffff !important;
+}
+
+#sales-summary .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Estilos para las alertas del dashboard */
+#dashboard-alerts .alert {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+#dashboard-alerts .alert-info {
+    background-color: rgba(23, 162, 184, 0.2);
+    border-color: rgba(23, 162, 184, 0.4);
+    color: #ffffff;
+}
+
+#dashboard-alerts .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.4);
+    color: #ffffff;
+}
+
+#dashboard-alerts .alert-success {
+    background-color: rgba(40, 167, 69, 1.0);
+    border-color: rgba(40, 167, 69, 1.0);
+    color: #4cf10a;
+}
+
+#dashboard-alerts .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    border-color: rgba(220, 53, 69, 0.4);
+    color: #ffffff;
+}
+
+/* Estilos para los iconos en los resúmenes */
+#seasonal-summary i,
+#forecast-metrics i {
+    color: #ffffff !important;
+}
+
+/* Estilos para los cambios de ventas en las tarjetas KPI */
+#sales-change,
+#models-change,
+#avg-change,
+#top-change {
+    color: #ffffff !important;
+    opacity: 0.9;
+}
+
+/* Estilos para el texto de estado de carga */
+.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Estilos para los tooltips personalizados */
+.custom-tooltip {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Estilos adicionales para asegurar visibilidad de textos */
+.card-body h6,
+.card-body p,
+.card-body span,
+.card-body small {
+    color: #ffffff !important;
+}
+
+.card-body .text-primary,
+.card-body .text-success,
+.card-body .text-info,
+.card-body .text-warning,
+.card-body .text-danger {
+    color: #ffffff !important;
+}
+
+/* Estilos específicos para las tarjetas KPI */
+.kpi-card {
+    color: #ffffff !important;
+}
+
+.kpi-card * {
+    color: #ffffff !important;
+}
+
+/* Estilos para los badges en las métricas */
+.badge.bg-success,
+.badge.bg-info,
+.badge.bg-warning,
+.badge.bg-danger {
+    color: #ffffff !important;
+}
+
+/* Estilos para las alertas en los resúmenes */
+.alert-info,
+.alert-warning,
+.alert-success,
+.alert-danger {
+    color: #ffffff !important;
+}
+
+.alert-info small,
+.alert-warning small,
+.alert-success small,
+.alert-danger small {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Estilos para los iconos en todos los contextos */
+.bi {
+    color: #ffffff !important;
+}
+
+/* Estilos para los textos de estado */
+.text-center.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Estilos para los números grandes en las tarjetas */
+.kpi-card h3 {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+/* Estilos para los cambios de porcentaje */
+#sales-change,
+#models-change,
+#avg-change,
+#top-change {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+/* Estilos para los resúmenes estadísticos */
+#sales-summary .text-center h4 {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+#sales-summary .text-center strong {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+/* Estilos específicos para la sección de administración */
+#section-admin .card {
+    background: rgba(255,255,255,0.97);
+    color: #333;
+}
+
+#section-admin .card-header {
+    background: linear-gradient(90deg, #004173 60%, #0979b0 100%);
+    color: #fff;
+}
+
+#section-admin .table {
+    color: #333;
+}
+
+#section-admin .table th {
+    background-color: #343a40;
+    color: #fff;
+    border-color: #454d55;
+}
+
+#section-admin .table td {
+    color: #333;
+    border-color: #dee2e6;
+}
+
+#section-admin .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.05);
+}
+
+#section-admin .table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+
+#section-admin .text-muted {
+    color: #6c757d !important;
+}
+
+#section-admin .badge {
+    color: #fff;
+}
+
+#section-admin .btn {
+    color: #fff;
+}
+
+#section-admin .btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+#section-admin .btn-outline-primary:hover {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+#section-admin .btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+#section-admin .btn-outline-danger:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+#section-admin .modal-content {
+    background: rgba(255,255,255,0.97);
+    color: #333;
+}
+
+#section-admin .modal-header {
+    background: linear-gradient(90deg, #004173 60%, #0979b0 100%);
+    color: #fff;
+}
+
+#section-admin .modal-body {
+    color: #333;
+}
+
+#section-admin .form-label {
+    color: #333;
+}
+
+#section-admin .form-control {
+    color: #333;
+    background-color: #fff;
+    border-color: #ced4da;
+}
+
+#section-admin .form-control:focus {
+    color: #333;
+    background-color: #fff;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+#section-admin .form-select {
+    color: #333;
+    background-color: #fff;
+    border-color: #ced4da;
+}
+
+#section-admin .form-select:focus {
+    color: #333;
+    background-color: #fff;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+#section-admin .dropdown-item {
+    color: #333;
+}
+
+#section-admin .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+#section-admin .dropdown-item-text {
+    color: #6c757d;
+}
+
+#section-admin .dropdown-divider {
+    border-color: #dee2e6;
+}
+
+#section-admin .text-center {
+    color: #333;
+}
+
+#section-admin .text-center.text-muted {
+    color: #6c757d !important;
+}
+
+#section-admin .card-body {
+    color: #333;
+}
+
+#section-admin .card-body h5,
+#section-admin .card-body h6 {
+    color: #333;
+}
+
+#section-admin .card-body p {
+    color: #333;
+}
+
+#section-admin .card-body small {
+    color: #6c757d;
+}
+
+#section-admin .card-body strong {
+    color: #333;
+}
+
+#section-admin .card-body span {
+    color: #333;
+}
+
+#section-admin .card-body td {
+    color: #333;
+}
+
+#section-admin .card-body th {
+    color: #fff;
+}
+
+#section-admin .card-body .text-muted {
+    color: #6c757d !important;
+}
+
+#section-admin .card-body .text-danger {
+    color: #dc3545 !important;
+}
+
+#section-admin .card-body .text-success {
+    color: #28a745 !important;
+}
+
+#section-admin .card-body .text-warning {
+    color: #ffc107 !important;
+}
+
+#section-admin .card-body .text-info {
+    color: #17a2b8 !important;
+}
+
+#section-admin .card-body .text-primary {
+    color: #007bff !important;
+}
+
+#section-admin .card-body .text-secondary {
+    color: #6c757d !important;
+}
+
+#section-admin .card-body .text-dark {
+    color: #343a40 !important;
+}
+
+#section-admin .card-body .text-light {
+    color: #f8f9fa !important;
+}
+
+#section-admin .card-body .text-white {
+    color: #fff !important;
+}
+
+#section-admin .card-body .text-black {
+    color: #000 !important;
+}
+
+#section-admin .card-body .text-black-50 {
+    color: rgba(0,0,0,.5) !important;
+}
+
+#section-admin .card-body .text-white-50 {
+    color: rgba(255,255,255,.5) !important;
+}
+
+/* Estilos específicos para la columna Detalles en la tabla de actividad */
+#section-admin .table td:nth-child(3) {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.85rem !important;
+    word-break: break-all !important;
+    max-width: 200px !important;
+}
+
+#section-admin .table td:nth-child(3) code {
+    color: #000000 !important;
+    background-color: #f8f9fa !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+    font-size: 0.8rem !important;
+}
+
+/* Asegurar que el texto JSON en la columna Detalles sea visible */
+#section-admin .table td:nth-child(3) pre {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    margin: 0 !important;
+    font-size: 0.8rem !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+}
+
+/* Forzar texto negro en toda la columna Detalles */
+#section-admin .table td:nth-child(3) * {
+    color: #000000 !important;
+}
+
+/* Estilos específicos para la página de login */
+.form-card .card-header h3 {
+    color: #ffffff !important;
+}
+.form-card .btn-primary {
+    color: #ffffff !important;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+.form-card .btn-primary:hover {
+    color: #ffffff !important;
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+.form-card label {
+    color: #ffffff !important;
+}
+.form-card .text-center a {
+    color: #ffffff !important;
+}
+.form-card .text-center a:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+}
+
+/* Asegurar que los títulos de la sección admin sean blancos */
+#section-admin .card-header {
+    color: #ffffff !important;
+}
+#section-admin .card-header h5,
+#section-admin .card-header h6 {
+    color: #ffffff !important;
+}

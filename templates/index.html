@@ -1,0 +1,886 @@
+{% extends 'base.html' %}
+
+{% block carga %}
+<div class="card file-upload-card">
+                    <div class="card-header">
+        <i class="bi bi-upload me-2"></i>Cargar Archivos de Datos
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group mb-3">
+                                <label for="bom_file">Archivo BOM (Excel)</label>
+                <input type="file" class="form-control" id="bom_file" name="bom_file" accept=".xlsx, .xls">
+                                <small class="form-text text-muted">Estado: <span class="badge badge-{% if bom_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if bom_loaded else 'No Cargado' }}</span></small>
+                            </div>
+            <div class="form-group mb-3">
+                                <label for="stock_file">Archivo de Stock (Excel)</label>
+                <input type="file" class="form-control" id="stock_file" name="stock_file" accept=".xlsx, .xls">
+                                <small class="form-text text-muted">Estado: <span class="badge badge-{% if stock_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if stock_loaded else 'No Cargado' }}</span></small>
+                            </div>
+            <div class="form-group mb-3">
+                                <label for="lot_file">Archivo de Lote (Excel)</label>
+                <input type="file" class="form-control" id="lot_file" name="lot_file" accept=".xlsx, .xls">
+                                <small class="form-text text-muted">Estado: <span class="badge badge-{% if lot_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if lot_loaded else 'No Cargado' }}</span></small>
+                            </div>
+            <div class="form-group mb-3">
+                                <label for="cost_file">Archivo de Costos (Excel)</label>
+                <input type="file" class="form-control" id="cost_file" name="cost_file" accept=".xlsx, .xls">
+                                <small class="form-text text-muted">Estado: <span class="badge badge-{% if cost_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if cost_loaded else 'No Cargado' }}</span></small>
+                            </div>
+            <div class="form-group mb-3">
+                <label for="historico_costos_file">Histórico de Costos (Excel)</label>
+                <input type="file" class="form-control" id="historico_costos_file" name="historico_costos_file" accept=".xlsx, .xls">
+                <small class="form-text text-muted">Estado: <span class="badge badge-{% if historico_costos_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if historico_costos_loaded else 'No Cargado' }}</span></small>
+            </div>
+            <div class="form-group mb-3">
+                                <label for="sales_file">Archivo de Historial de Ventas (Excel)</label>
+                <input type="file" class="form-control" id="sales_file" name="sales_file" accept=".xlsx, .xls">
+                                <small class="form-text text-muted">Estado: <span class="badge badge-{% if sales_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if sales_loaded else 'No Cargado' }}</span></small>
+                            </div>
+            <div class="form-group mb-3">
+                                <label for="suppliers_file">Archivo de Proveedores (Excel)</label>
+                <input type="file" class="form-control" id="suppliers_file" name="suppliers_file" accept=".xlsx, .xls">
+                                <small class="form-text text-muted">Estado: <span class="badge badge-{% if suppliers_loaded %}success{% else %}danger{% endif %}">{{ 'Cargado' if suppliers_loaded else 'No Cargado' }}</span></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Cargar Archivos</button>
+                        </form>
+                        <form action="{{ url_for('clear_data') }}" method="post" class="mt-3">
+                            <button type="submit" class="btn btn-warning btn-block">Limpiar Datos de Sesión</button>
+                        </form>
+                    </div>
+                </div>
+{% endblock %}
+
+{% block dashboard %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard Ejecutivo
+        <div class="float-end">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="refreshDashboard()" title="Actualizar dashboard">
+                <i class="bi bi-arrow-clockwise"></i> Actualizar
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- KPIs Principales -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="kpi-card bg-primary text-white">
+                    <div class="kpi-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="total-sales-kpi">-</h3>
+                        <p>Ventas Totales</p>
+                        <small id="sales-change">-</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card bg-success text-white">
+                    <div class="kpi-icon">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="total-models-kpi">-</h3>
+                        <p>Modelos Activos</p>
+                        <small id="models-change">-</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card bg-warning text-white">
+                    <div class="kpi-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="avg-sales-kpi">-</h3>
+                        <p>Promedio Ventas</p>
+                        <small id="avg-change">-</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card bg-info text-white">
+                    <div class="kpi-icon">
+                        <i class="bi bi-star"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3 id="top-model-kpi">-</h3>
+                        <p>Modelo Top</p>
+                        <small id="top-change">-</small>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Gráficos de Tendencias -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-graph-up me-2"></i>Tendencia de Ventas (Últimos 12 Meses)
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:250px;">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-pie-chart me-2"></i>Distribución por Período
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:250px;">
+                            <canvas id="periodDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas y Notificaciones -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-bell me-2"></i>Alertas y Notificaciones
+                    </div>
+                    <div class="card-body">
+                        <div id="dashboard-alerts">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Bienvenido al Dashboard:</strong> Los KPIs se actualizarán automáticamente cuando cargues los archivos de datos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Análisis Avanzado de Ventas -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-graph-up-arrow me-2"></i>Análisis Avanzado de Ventas
+                <div class="float-end">
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadSeasonalAnalysis()" title="Análisis de estacionalidad">
+                        <i class="bi bi-calendar-event"></i> Estacionalidad
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-success" onclick="loadSalesForecast()" title="Predicciones de ventas">
+                        <i class="bi bi-crystal-ball"></i> Predicciones
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Pestañas para diferentes análisis -->
+                <ul class="nav nav-tabs" id="advancedAnalysisTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="seasonal-tab" data-bs-toggle="tab" data-bs-target="#seasonal-content" type="button" role="tab">
+                            <i class="bi bi-calendar-event me-1"></i>Análisis de Estacionalidad
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="forecast-tab" data-bs-toggle="tab" data-bs-target="#forecast-content" type="button" role="tab">
+                            <i class="bi bi-crystal-ball me-1"></i>Predicciones de Ventas
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab-analisis" href="#" onclick="showSection('analisis')">
+                            <i class="bi bi-bar-chart"></i> Análisis y Reportes
+                        </a>
+                    </li>
+                    {% if current_user.has_permission('user_management') %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab-admin" href="#" onclick="showSection('admin')">
+                            <i class="bi bi-gear"></i> Administración
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <div class="tab-content" id="advancedAnalysisContent">
+                    <!-- Contenido de Análisis de Estacionalidad -->
+                    <div class="tab-pane fade show active" id="seasonal-content" role="tabpanel">
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-bar-chart me-2"></i>Índice de Estacionalidad por Mes
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container" style="position: relative; height:300px;">
+                                            <canvas id="seasonalChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-info-circle me-2"></i>Resumen de Estacionalidad
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="seasonal-summary">
+                                            <div class="text-center text-muted">
+                                                <i class="bi bi-arrow-clockwise fs-1"></i>
+                                                <p class="mt-2">Haz clic en "Estacionalidad" para cargar el análisis</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenido de Predicciones -->
+                    <div class="tab-pane fade" id="forecast-content" role="tabpanel">
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-graph-up me-2"></i>Predicciones de Ventas (Próximos 6 Meses)
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container" style="position: relative; height:300px;">
+                                            <canvas id="forecastChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-speedometer me-2"></i>Métricas del Modelo
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="forecast-metrics">
+                                            <div class="text-center text-muted">
+                                                <i class="bi bi-crystal-ball fs-1"></i>
+                                                <p class="mt-2">Haz clic en "Predicciones" para cargar el modelo</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block fabricabilidad %}
+<div class="card mb-4" id="individual-calc-card">
+                    <div class="card-header">
+        <i class="bi bi-tools me-2"></i>Cálculo de Fabricabilidad Individual
+                    </div>
+                    <div class="card-body">
+        <form id="fabricabilidad_form" action="{{ url_for('calculate_individual') }}" method="post">
+            <div class="form-group mb-3">
+                                <label for="model_name_select">Nombre del Modelo:</label>
+                <select class="form-control" id="model_name_select" name="model_name" required>
+                    <option value="">Seleccionar modelo...</option>
+                                    {% for model in model_options %}
+                                        <option value="{{ model }}">{{ model }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+            <div class="form-group mb-3">
+                                <label for="desired_qty">Cantidad Deseada:</label>
+                <input type="number" class="form-control" id="desired_qty" name="desired_qty" min="1" required>
+                            </div>
+            <button type="submit" class="btn btn-success btn-block">Calcular Fabricabilidad</button>
+                        </form>
+        <div id="fabricabilidad-alert" class="alert mt-3" style="display:none;"></div>
+                    </div>
+                </div>
+<div id="fabricabilidad-resultado"></div>
+<script>
+function mostrarResultadoFabricabilidad(data) {
+    if (!data.success) {
+        mostrarAlertaFabricabilidad(data.error || 'Ocurrió un error.');
+        return;
+    }
+    window.location.href = data.redirect_url;
+}
+function mostrarAlertaFabricabilidad(msg, tipo='danger') {
+    const alert = document.getElementById('fabricabilidad-alert');
+    alert.className = 'alert alert-' + tipo + ' mt-3';
+    alert.style.display = '';
+    alert.textContent = msg;
+}
+document.getElementById('fabricabilidad_form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => mostrarResultadoFabricabilidad(data))
+    .catch(() => mostrarAlertaFabricabilidad('Error al comunicarse con el servidor.'));
+});
+</script>
+{% endblock %}
+
+{% block demanda %}
+<div class="card mb-4">
+                    <div class="card-header">
+        <i class="bi bi-graph-up me-2"></i>Proyección de Demanda y Sugerencias de Compra
+                    </div>
+                    <div class="card-body">
+        <div class="mb-3">
+            <span class="badge bg-info text-dark me-2" style="cursor:pointer;" onclick="seleccionarCategoriaModelos('bebederos')">Bebederos</span>
+            <span class="badge bg-info text-dark me-2" style="cursor:pointer;" onclick="seleccionarCategoriaModelos('dispensers')">Dispensers</span>
+            <span class="badge bg-secondary text-light" style="cursor:pointer;" onclick="seleccionarCategoriaModelos('todos')">Todos</span>
+                    </div>
+        <form id="demanda_form" action="{{ url_for('calculate_model_demand') }}" method="post">
+            <div class="form-group mb-3">
+                <label for="models_dropdown">Seleccionar Modelos:</label>
+                <div class="dropdown" id="models_dropdown">
+                    <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span id="selected-models-text">Seleccionar modelos...</span>
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto;">
+                        {% for model in model_options %}
+                        <li>
+                            <label class="dropdown-item m-0">
+                                <input type="checkbox" class="form-check-input me-2 modelo-checkbox" value="{{ model }}"> {{ model }}
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <input type="hidden" name="selected_models_demand" id="selected_models_hidden">
+            </div>
+            <div class="form-group mb-3">
+                <label for="start_date">Fecha de Inicio Proyección:</label>
+                <input type="text" class="form-control flatpickr-input" id="start_date" name="start_date" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="end_date">Fecha de Fin Proyección:</label>
+                <input type="text" class="form-control flatpickr-input" id="end_date" name="end_date" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Calcular Demanda</button>
+        </form>
+        <div id="demanda-alert" class="alert mt-3" style="display:none;"></div>
+    </div>
+</div>
+<div id="demanda-resultado"></div>
+<script>
+const categoriasModelos = {
+    'bebederos': ['BP105','BP112'],
+    'dispensers': ['B90','B93','B96','BB170','BR170','R90','R93','R96'],
+    'todos': [] // Se llenará dinámicamente
+};
+// Llenar la categoría 'todos' con todos los modelos al cargar
+window.addEventListener('DOMContentLoaded', function() {
+    categoriasModelos['todos'] = Array.from(document.querySelectorAll('.modelo-checkbox')).map(cb => cb.value);
+    actualizarTextoSeleccionados();
+    document.querySelectorAll('.modelo-checkbox').forEach(cb => {
+        cb.addEventListener('change', actualizarTextoSeleccionados);
+    });
+});
+function seleccionarCategoriaModelos(cat) {
+    let modelos = categoriasModelos[cat] || [];
+    document.querySelectorAll('.modelo-checkbox').forEach(cb => {
+        cb.checked = modelos.includes(cb.value);
+    });
+    actualizarTextoSeleccionados();
+}
+function actualizarTextoSeleccionados() {
+    const seleccionados = Array.from(document.querySelectorAll('.modelo-checkbox:checked')).map(cb => cb.value);
+    const texto = seleccionados.length > 0 ? seleccionados.join(', ') : 'Seleccionar modelos...';
+    document.getElementById('selected-models-text').textContent = texto;
+}
+document.getElementById('demanda_form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const seleccionados = Array.from(document.querySelectorAll('.modelo-checkbox:checked')).map(cb => cb.value);
+    document.getElementById('selected_models_hidden').value = JSON.stringify(seleccionados);
+    const form = e.target;
+    const formData = new FormData(form);
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => mostrarResultadoDemanda(data))
+    .catch(() => mostrarAlertaDemanda('Error al comunicarse con el servidor.'));
+});
+function mostrarResultadoDemanda(data) {
+    if (!data.success) {
+        mostrarAlertaDemanda(data.error || 'Ocurrió un error.');
+        return;
+    }
+    window.location.href = data.redirect_url;
+}
+function mostrarAlertaDemanda(msg, tipo='danger') {
+    const alert = document.getElementById('demanda-alert');
+    alert.className = 'alert alert-' + tipo + ' mt-3';
+    alert.style.display = '';
+    alert.textContent = msg;
+}
+</script>
+{% endblock %}
+
+{% block equilibrado %}
+<div class="card mb-4" id="equalization-calc-card">
+                    <div class="card-header">
+        <i class="bi bi-arrow-left-right me-2"></i>Cálculo de Equilibrado de Stock Global
+                    </div>
+                    <div class="card-body">
+        <form id="equalization_form" action="{{ url_for('calculate_stock_equalization') }}" method="post">
+            <div class="form-group mb-3">
+                <label for="models_select_equalization">Seleccionar Modelos:</label>
+                <select class="form-control" id="models_select_equalization" name="selected_models_equalization" multiple>
+                                    {% for model in model_options %}
+                                        <option value="{{ model }}">{{ model }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+            <div class="form-group mb-3">
+                <label for="start_date_equalization">Fecha de Inicio Proyección:</label>
+                <input type="text" class="form-control flatpickr-input" id="start_date_equalization" name="start_date_equalization" required>
+                            </div>
+            <div class="form-group mb-3">
+                <label for="end_date_equalization">Fecha de Fin Proyección:</label>
+                <input type="text" class="form-control flatpickr-input" id="end_date_equalization" name="end_date_equalization" required>
+                            </div>
+            <button type="submit" class="btn btn-success btn-block">Calcular Equilibrado</button>
+                        </form>
+        <div id="equalization-alert" class="alert mt-3" style="display:none;"></div>
+                    </div>
+                </div>
+<div id="equalization-resultado"></div>
+{% endblock %}
+
+{% block costo_total %}
+<div class="card mb-4" id="model-full-cost-card">
+                    <div class="card-header">
+        <i class="bi bi-calculator me-2"></i>Costo Total de Fabricación de un Modelo
+                    </div>
+                    <div class="card-body">
+        <form id="model_full_cost_form" action="{{ url_for('calculate_model_full_cost') }}" method="post">
+            <div class="form-group mb-3">
+                <label for="model_name_full_cost_select">Nombre del Modelo:</label>
+                <select class="form-control" id="model_name_full_cost_select" name="model_name_full_cost" required>
+                    <option value="">Seleccionar modelo...</option>
+                                    {% for model in model_options %}
+                                        <option value="{{ model }}">{{ model }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+            <div class="form-group mb-3">
+                <label for="quantity_full_cost">Cantidad a Fabricar:</label>
+                <input type="number" class="form-control" id="quantity_full_cost" name="quantity_full_cost" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Calcular Costo Total</button>
+        </form>
+        <div id="costo-total-alert" class="alert mt-3" style="display:none;"></div>
+    </div>
+</div>
+<div id="costo-total-resultado"></div>
+{% endblock %}
+
+{% block costos %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-currency-dollar me-2"></i>Historial de Costos por Artículo
+    </div>
+    <div class="card-body">
+        <div class="form-group mb-4">
+            <label for="articulo_costos_select">Seleccionar artículo:</label>
+            <select class="form-control" id="articulo_costos_select">
+                <option value="">Cargando artículos...</option>
+            </select>
+        </div>
+        <div id="costos-historicos-visualizacion" style="display:none;">
+            <div class="mb-4">
+                <canvas id="costosHistoricosChart" height="120"></canvas>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Año</th>
+                            <th>Costo (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="costos-historicos-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="costos-historicos-alert" class="alert alert-info mt-3" style="display:none;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block analisis %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-bar-chart me-2"></i>Análisis de Ventas Históricas
+        <div class="float-end">
+            <button type="button" class="btn btn-sm btn-info me-2" onclick="checkFilterStatus()" title="Verificar estado de filtros">
+                <i class="bi bi-info-circle"></i> Verificar
+            </button>
+            <button type="button" class="btn btn-sm btn-success me-2" onclick="testUpdateSalesAnalysis()" title="Probar actualización manual">
+                <i class="bi bi-play-circle"></i> Probar
+            </button>
+            <button type="button" class="btn btn-sm btn-warning me-2" onclick="forceReload()" title="Forzar recarga completa">
+                <i class="bi bi-arrow-clockwise"></i> Recargar
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="checkChartStatus()" title="Verificar estado de gráficos">
+                <i class="bi bi-bug"></i> Gráficos
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Filtros para el análisis -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label for="year_filter" class="form-label">Año:</label>
+                <select class="form-control" id="year_filter">
+                    <option value="">Todos los años</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="period_filter" class="form-label">Período:</label>
+                <select class="form-control" id="period_filter">
+                    <option value="year">Año completo</option>
+                    <option value="semester">Semestre</option>
+                    <option value="quarter">Trimestre</option>
+                    <option value="month">Mes</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="model_filter" class="form-label">Modelos:</label>
+                <select class="form-control" id="model_filter" multiple>
+                    <option value="">Cargando modelos...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Gráfico de ventas históricas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-graph-up me-2"></i>Evolución de Ventas
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:400px;">
+                    <canvas id="historicalSalesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen estadístico -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-calculator me-2"></i>Resumen Estadístico
+                            </div>
+                    <div class="card-body">
+                        <div id="sales-summary">
+                            <p class="text-muted">Selecciona filtros para ver el resumen</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-pie-chart me-2"></i>Distribución por Modelo
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:300px;">
+                            <canvas id="modelDistributionChart"></canvas>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de datos detallados -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="bi bi-table me-2"></i>Datos Detallados
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="sales-details-table">
+                        <thead>
+                            <tr>
+                                <th>Período</th>
+                                <th>Modelo</th>
+                                <th>Cantidad Vendida</th>
+                                <th>Porcentaje del Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-details-tbody">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Selecciona filtros para ver los datos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin %}
+<div class="container-fluid">
+    <!-- Gestión de Usuarios -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people-fill me-2"></i>Gestión de Usuarios
+                    </h5>
+                    <button type="button" class="btn btn-primary" onclick="showCreateUserModal()">
+                        <i class="bi bi-person-plus me-1"></i>Nuevo Usuario
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Último Login</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">Cargando usuarios...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actividad de Usuarios -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-activity me-2"></i>Actividad de Usuarios
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Acción</th>
+                                    <th>Detalles</th>
+                                    <th>IP</th>
+                                    <th>Fecha/Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Cargando actividad...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear usuario -->
+<div class="modal fade" id="createUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear Nuevo Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createUserForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nombre de Usuario *</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña *</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="role_id" class="form-label">Rol *</label>
+                                <select class="form-select" id="role_id" name="role_id" required>
+                                    <option value="">Seleccionar rol...</option>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="createUser()">Crear Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar usuario -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="edit_user_id" name="user_id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_username" class="form-label">Nombre de Usuario *</label>
+                                <input type="text" class="form-control" id="edit_username" name="username" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="edit_email" name="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_first_name" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="edit_first_name" name="first_name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_last_name" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="edit_last_name" name="last_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_new_password" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="edit_new_password" name="new_password" placeholder="Dejar en blanco para mantener la actual">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_role_id" class="form-label">Rol *</label>
+                                <select class="form-select" id="edit_role_id" name="role_id" required>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="edit_is_active" name="is_active">
+                            <label class="form-check-label" for="edit_is_active">
+                                Usuario Activo
+                            </label>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="updateUser()">Guardar Cambios</button>
+            </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que quieres eliminar al usuario <strong id="deleteUsername"></strong>?</p>
+                <p class="text-danger">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="deleteUser()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    // Activar la pestaña correcta al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeSection = '{{ active_section }}';
+        if (activeSection && activeSection !== 'dashboard') {
+            showSection(activeSection);
+        }
+    });
+</script>

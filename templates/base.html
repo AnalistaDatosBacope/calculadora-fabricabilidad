@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Fabricabilidad</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header-bar">
+        <span><i class="bi bi-gear-fill me-2"></i>Calculadora de Fabricabilidad</span>
+        {% if current_user.is_authenticated %}
+            <div class="dropdown">
+                <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle me-1"></i>{{ current_user.get_full_name() }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><span class="dropdown-item-text"><small class="text-muted">{{ current_user.role.name }}</small></span></li>
+                    <li><hr class="dropdown-divider"></li>
+                    {% if current_user.has_permission('user_management') %}
+                    <li><a class="dropdown-item" href="#" onclick="showSection('admin'); return false;">
+                        <i class="bi bi-people me-2"></i>Gestionar Usuarios
+                    </a></li>
+                    <li><a class="dropdown-item" href="#" onclick="showSection('admin'); return false;">
+                        <i class="bi bi-activity me-2"></i>Actividad de Usuarios
+                    </a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">
+                        <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                    </a></li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-dashboard" href="#" onclick="showSection('dashboard')">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab-carga" href="#" onclick="showSection('carga')">
+                                <i class="bi bi-upload"></i> Carga de Archivos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-fabricabilidad" href="#" onclick="showSection('fabricabilidad')">
+                                <i class="bi bi-tools"></i> Fabricabilidad
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-demanda" href="#" onclick="showSection('demanda')">
+                                <i class="bi bi-graph-up"></i> Proyección de Demanda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-equilibrado" href="#" onclick="showSection('equilibrado')">
+                                <i class="bi bi-arrow-left-right"></i> Equilibrado de Stock
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-costo-total" href="#" onclick="showSection('costo_total')">
+                                <i class="bi bi-calculator"></i> Costo Total
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-costos" href="#" onclick="showSection('costos')">
+                                <i class="bi bi-currency-dollar"></i> Costos Históricos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-analisis" href="#" onclick="showSection('analisis')">
+                                <i class="bi bi-bar-chart"></i> Análisis y Reportes
+                            </a>
+                        </li>
+                        {% if current_user.has_permission('user_management') %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab-admin" href="#" onclick="showSection('admin')">
+                                <i class="bi bi-gear"></i> Administración
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div id="section-dashboard" class="section-tab" style="display:none;">
+                    {% block dashboard %}{% endblock %}
+                </div>
+                <div id="section-carga" class="section-tab">
+                    {% block carga %}{% endblock %}
+                </div>
+                <div id="section-fabricabilidad" class="section-tab" style="display:none;">
+                    {% block fabricabilidad %}{% endblock %}
+                </div>
+                <div id="section-demanda" class="section-tab" style="display:none;">
+                    {% block demanda %}{% endblock %}
+                </div>
+                <div id="section-equilibrado" class="section-tab" style="display:none;">
+                    {% block equilibrado %}{% endblock %}
+                </div>
+                <div id="section-costo_total" class="section-tab" style="display:none;">
+                    {% block costo_total %}{% endblock %}
+                </div>
+                <div id="section-costos" class="section-tab" style="display:none;">
+                    {% block costos %}{% endblock %}
+                </div>
+                <div id="section-analisis" class="section-tab" style="display:none;">
+                    {% block analisis %}{% endblock %}
+                </div>
+                <div id="section-admin" class="section-tab" style="display:none;">
+                    {% block admin %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        // Función showSection movida a script.js
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
