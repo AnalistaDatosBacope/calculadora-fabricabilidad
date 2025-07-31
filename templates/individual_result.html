@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -116,4 +117,124 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {# individual_result.html no tiene lógica JS compleja, no requiere script.js #}
 </body>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado de Cálculo de Fabricabilidad</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Resultado del Cálculo de Fabricabilidad para {{ result.nombre_modelo }}</h1>
+
+        <div class="card">
+            <div class="card-header">
+                Resumen del Cálculo
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="value-box">
+                            <h3>{{ result.desired_qty }}</h3>
+                            <p>Cantidad Deseada</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="value-box">
+                            <h3>{{ result.cantidad_fabricable }}</h3>
+                            <p>Cantidad Fabricable con Stock Actual</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="value-box">
+                            <h3>$ {{ "%.2f"|format(result.costo_total_sugerencias) }}</h3>
+                            <p>Costo Total de Compras Sugeridas</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if result.sugerencias_compra %}
+                    <h4 class="mt-4 mb-3 text-center">Sugerencias de Compra de Componentes</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Artículo</th>
+                                    <th>Cantidad Necesaria</th>
+                                    <th>Costo Unitario ($)</th>
+                                    <th>Costo Total ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for s in result.sugerencias_compra %}
+                                <tr>
+                                    <td>{{ s.articulo }}</td>
+                                    <td>{{ "%.2f"|format(s.cantidad_necesaria) }}</td> {# Formato decimal #}
+                                    <td>{{ "%.2f"|format(s.costo_unitario) }}</td>
+                                    <td>{{ "%.2f"|format(s.costo_total) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center alert alert-success mt-4">🎉 ¡Excelente! No se necesitan compras adicionales para fabricar la cantidad deseada.</p>
+                {% endif %}
+
+                {% if result.detalle_componentes %}
+                    <h4 class="mt-5 mb-3 text-center">Detalle de Componentes</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Artículo</th>
+                                    <th>Descripción</th>
+                                    <th>Cant. Requerida (Total)</th>
+                                    <th>Stock Disponible</th>
+                                    <th>Cant. Faltante (p/ deseada)</th>
+                                    <th>Costo Unitario ($)</th>
+                                    <th>Costo Total ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for comp in result.detalle_componentes %}
+                                <tr>
+                                    <td>{{ comp.articulo }}</td>
+                                    <td>{{ comp.articulo_descripcion }}</td>
+                                    <td>{{ "%.2f"|format(comp.cantidad_requerida_total) }}</td> {# Formato decimal #}
+                                    <td>{{ "%.2f"|format(comp.cantidad_disponible_stock) }}</td> 
+                                    <td>{{ "%.2f"|format(comp.cantidad_faltante) }}</td> {# Formato decimal #}
+                                    <td>{{ "%.2f"|format(comp.costo_unitario) }}</td>
+                                    <td>{{ "%.2f"|format(comp.costo_total) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center alert alert-info mt-4">No se encontraron componentes para el modelo seleccionado en el BOM.</p>
+                {% endif %}
+
+
+                <div class="text-center mt-5">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">Volver a la Página Principal</a>
+                    <form action="{{ url_for('generate_report') }}" method="post" class="d-inline-block ml-3"> {# Cambiado a form para send_file #}
+                        <input type="hidden" name="report_type" value="individual">
+                        <button type="submit" class="btn btn-info btn-lg">Descargar Informe Excel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {# individual_result.html no tiene lógica JS compleja, no requiere script.js #}
+</body>
+
 </html>

@@ -33,7 +33,6 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_TYPE'] = None  # Deshabilitar sesiones de archivos
 app.config['SESSION_USE_SIGNER'] = True  # Usar firmas para cookies
 app.config['SESSION_KEY_PREFIX'] = 'calculadora_'  # Prefijo para cookies
-
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
@@ -67,7 +66,6 @@ session_folder = 'flask_session'
 if not os.path.exists(session_folder):
     os.makedirs(session_folder)
 app.config['SESSION_FILE_DIR'] = session_folder
-
 # Removido SESSION_SIZE_LIMIT ya que ahora siempre se guardarán en archivo
 
 # --- MODELOS DE BASE DE DATOS PARA USUARIOS Y ROLES ---
@@ -140,7 +138,7 @@ class UserActivity(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return f"UserActivity('{self.action}', '{self.timestamp}')"
+        return f"UserActivity('{self.user.username}', '{self.action}', '{self.timestamp}')"
 
 class UserFileStatus(db.Model):
     """Modelo para almacenar el estado de archivos cargados por usuario"""
@@ -347,6 +345,19 @@ def get_render_file_status():
                 logging.info(f"Archivo {file_type} encontrado en cookies: {file_path}")
     
     return status
+
+def log_activity(action, details=None):
+    """Función para registrar actividad de usuarios"""
+    if current_user.is_authenticated:
+        activity = UserActivity(
+            user_id=current_user.id,
+            action=action,
+            details=json.dumps(details) if details else None,
+            ip_address=request.remote_addr,
+            user_agent=request.headers.get('User-Agent')
+        )
+        db.session.add(activity)
+        db.session.commit()
 
 # --- PERMISOS DEFINIDOS ---
 PERMISSIONS = {
@@ -703,13 +714,13 @@ def index():
     context = {
         'model_options': model_options,
         'sales_years': sales_years,
-        'bom_loaded': files_status['bom_loaded'],
-        'stock_loaded': files_status['stock_loaded'],
+        'bom_loaded': files_status.get('bom_loaded', 'boms' in calculadora_data_raw),
+        'stock_loaded': files_status.get('stock_loaded', 'stock' in calculadora_data_raw),
         'lot_loaded': 'lots' in calculadora_data_raw, # Mantener por si se reintroduce la funcionalidad
-        'cost_loaded': files_status['cost_loaded'],
-        'sales_loaded': files_status['sales_loaded'],
-        'suppliers_loaded': files_status['suppliers_loaded'],
-        'historico_costos_loaded': files_status['historico_costos_loaded'],
+        'cost_loaded': files_status.get('cost_loaded', 'costs' in calculadora_data_raw),
+        'sales_loaded': files_status.get('sales_loaded', 'sales_df' in calculadora_data_raw),
+        'suppliers_loaded': files_status.get('suppliers_loaded', 'suppliers_df' in calculadora_data_raw),
+        'historico_costos_loaded': files_status.get('historico_costos_loaded', 'historico_costos_df' in calculadora_data_raw),
         'individual_result': session.get('individual_result_path'), # Ahora se guarda la ruta
         'lot_calculation_results': session.get('lot_results_path'), # Ahora se guarda la ruta
         'aggregate_purchase_suggestions': session.get('lot_suggestions_path'), # Ahora se guarda la ruta
