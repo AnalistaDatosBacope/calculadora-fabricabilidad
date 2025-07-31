@@ -23,6 +23,13 @@ app = Flask(__name__)
 # ¡Cámbiala por una cadena aleatoria y compleja!
 app.secret_key = 'Laprida2375' # Usando la clave que me proporcionaste
 
+# Configuración de sesiones para Render.com
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
+app.config['SESSION_COOKIE_SECURE'] = True  # Para HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
@@ -50,6 +57,12 @@ login_manager.login_view = 'login' # La vista a la que se redirige si se intenta
 for folder in [app.config['UPLOAD_FOLDER'], app.config['DATA_CACHE_FOLDER'], app.config['REPORTS_FOLDER']]:
     if not os.path.exists(folder):
         os.makedirs(folder)
+
+# Crear carpeta para sesiones de archivos
+session_folder = 'flask_session'
+if not os.path.exists(session_folder):
+    os.makedirs(session_folder)
+app.config['SESSION_FILE_DIR'] = session_folder
 
 # Removido SESSION_SIZE_LIMIT ya que ahora siempre se guardarán en archivo
 
@@ -166,17 +179,25 @@ def admin_required(f):
     return decorated_function
 
 def log_activity(action, details=None):
-    """Función para registrar actividad de usuarios"""
+    """Registra actividad del usuario en la base de datos"""
     if current_user.is_authenticated:
-        activity = UserActivity(
-            user_id=current_user.id,
-            action=action,
-            details=json.dumps(details) if details else None,
-            ip_address=request.remote_addr,
-            user_agent=request.headers.get('User-Agent')
-        )
-        db.session.add(activity)
-        db.session.commit()
+        try:
+            activity = UserActivity(
+                user_id=current_user.id,
+                action=action,
+                details=json.dumps(details) if details else None,
+                ip_address=request.remote_addr,
+                user_agent=request.headers.get('User-Agent')
+            )
+            db.session.add(activity)
+            db.session.commit()
+        except Exception as e:
+            logging.error(f"Error logging activity: {e}")
+
+def make_session_permanent():
+    """Hace la sesión permanente para persistir en Render.com"""
+    session.permanent = True
+    session.modified = True
 
 # --- PERMISOS DEFINIDOS ---
 PERMISSIONS = {
@@ -318,6 +339,9 @@ def login():
         if user and user.check_password(password) and user.is_active:
             login_user(user) # Inicia sesión el usuario
             
+            # Hacer la sesión permanente para Render.com
+            make_session_permanent()
+            
             # Actualizar último login
             user.last_login = datetime.utcnow()
             db.session.commit()
@@ -376,6 +400,9 @@ def logout():
 @login_required # Requiere que el usuario esté logueado para acceder a la página principal
 def index():
     """Página principal de la aplicación"""
+    # Hacer la sesión permanente para Render.com
+    make_session_permanent()
+    
     # Obtener el parámetro section para activar una pestaña específica
     section = request.args.get('section', 'dashboard')
     
