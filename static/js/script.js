@@ -330,50 +330,62 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     }
 
-    if (calculateEqualizationBtn) {
-    calculateEqualizationBtn.addEventListener('click', async function() {
+    // Interceptar el envío del formulario de equilibrado
+    const equalizationForm = document.getElementById('equalization_form');
+    if (equalizationForm) {
+        equalizationForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevenir envío tradicional del formulario
+            
+            // DEBUG: Verificar si el select existe y tiene opciones
+            console.log("DEBUG (Frontend - Equilibrado): modelsSelectEqualization element:", modelsSelectEqualization);
+            console.log("DEBUG (Frontend - Equilibrado): Select options count:", $(modelsSelectEqualization).find('option').length);
+            console.log("DEBUG (Frontend - Equilibrado): Select is disabled:", modelsSelectEqualization.disabled);
+            
             const selectedModels = $(modelsSelectEqualization).val() || []; // Siempre array
-        const startDate = startDateEqualizationInput.value;
-        const endDate = endDateEqualizationInput.value;
+            const startDate = startDateEqualizationInput.value;
+            const endDate = endDateEqualizationInput.value;
 
-        // DEBUG: Frontend - Equilibrado de Stock
-        console.log("DEBUG (Frontend - Equilibrado): selectedModels from Select2:", selectedModels);
-        console.log("DEBUG (Frontend - Equilibrado): selectedModels.length:", selectedModels ? selectedModels.length : 'N/A');
-        console.log("DEBUG (Frontend - Equilibrado): startDate:", startDate);
-        console.log("DEBUG (Frontend - Equilibrado): endDate:", endDate);
+            // DEBUG: Frontend - Equilibrado de Stock
+            console.log("DEBUG (Frontend - Equilibrado): selectedModels from Select2:", selectedModels);
+            console.log("DEBUG (Frontend - Equilibrado): selectedModels.length:", selectedModels ? selectedModels.length : 'N/A');
+            console.log("DEBUG (Frontend - Equilibrado): startDate:", startDate);
+            console.log("DEBUG (Frontend - Equilibrado): endDate:", endDate);
 
             if (!selectedModels.length || !startDate || !endDate) {
-            alert('Por favor, seleccione al menos un modelo y un rango de fechas para el equilibrado.');
-            console.error("DEBUG (Frontend - Equilibrado): Validation failed. selectedModels:", selectedModels, "startDate:", startDate, "endDate:", endDate);
-            return; // This should prevent the fetch call
-        }
-
-        const modelsJsonString = JSON.stringify(selectedModels);
-        console.log("DEBUG (Frontend - Equilibrado): JSON stringified models:", modelsJsonString);
-
-        const formData = new FormData();
-        formData.append('selected_models_equalization', modelsJsonString); 
-        formData.append('start_date_equalization', startDate);
-        formData.append('end_date_equalization', endDate);
-
-        try {
-            const response = await fetch('/calculate_stock_equalization', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            console.log("Respuesta del servidor para equilibrado:", data); // DEBUG
-            if (data.success) {
-                window.location.href = data.redirect_url;
-            } else {
-                alert('Error al calcular el equilibrado de stock: ' + data.error);
+                alert('Por favor, seleccione al menos un modelo y un rango de fechas para el equilibrado.');
+                console.error("DEBUG (Frontend - Equilibrado): Validation failed. selectedModels:", selectedModels, "startDate:", startDate, "endDate:", endDate);
+                return; // This should prevent the fetch call
             }
-        } catch (error) {
-            console.error('Error en la solicitud:', error);
-            alert('Ocurrió un error al comunicarse con el servidor.');
-        }
-    });
+
+            const modelsJsonString = JSON.stringify(selectedModels);
+            console.log("DEBUG (Frontend - Equilibrado): JSON stringified models:", modelsJsonString);
+
+            const formData = new FormData();
+            formData.append('selected_models_equalization', modelsJsonString); 
+            formData.append('start_date_equalization', startDate);
+            formData.append('end_date_equalization', endDate);
+
+            try {
+                const response = await fetch('/calculate_stock_equalization', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                console.log("Respuesta del servidor para equilibrado:", data); // DEBUG
+                if (data.success) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Error al calcular el equilibrado de stock: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert('Ocurrió un error al comunicarse con el servidor.');
+            }
+        });
     }
+
+    // El event listener del botón ya no es necesario porque interceptamos el formulario
+    // if (calculateEqualizationBtn) { ... } - REMOVIDO
 
     // Interceptar el submit del formulario de costo total de fabricación
     console.log('=== DEBUG: Buscando formulario de costo total ==='); // DEBUG

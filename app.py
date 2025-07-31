@@ -522,7 +522,7 @@ def get_core_instance():
         'historico_costos_df_path': 'historico_costos_df'
     }
     
-    # Cargar datos desde rutas de archivos
+    # Cargar datos desde rutas de archivos (nuevo formato)
     for path_key, data_key in path_mapping.items():
         if path_key in calculadora_data_raw:
             file_path = calculadora_data_raw[path_key]
@@ -542,21 +542,23 @@ def get_core_instance():
             except Exception as e:
                 logging.error(f"DEBUG: get_core_instance - Error cargando {file_path}: {e}")
     
-    # También manejar datos que ya están en la sesión (compatibilidad)
+    # Cargar datos desde rutas directas (formato actual)
     for key, value in calculadora_data_raw.items():
-        if key not in path_mapping.values() and isinstance(value, str) and (value.endswith('.feather') or value.endswith('.pkl')):
+        if key in ['boms', 'stock', 'costs', 'sales_df', 'suppliers_df', 'historico_costos_df'] and isinstance(value, str) and (value.endswith('.feather') or value.endswith('.pkl')):
             try:
                 if os.path.exists(value):
                     if value.endswith('.feather'): 
                         loaded_data[key] = pd.read_feather(value)
+                        logging.info(f"DEBUG: get_core_instance - Datos cargados desde {value} para {key}")
                     elif value.endswith('.pkl'):
                         with open(value, 'rb') as f: 
                             loaded_data[key] = pickle.load(f)
+                        logging.info(f"DEBUG: get_core_instance - Datos cargados desde {value} para {key}")
                 else:
                     logging.warning(f"DEBUG: get_core_instance - Archivo no encontrado: {value}")
             except Exception as e:
                 logging.error(f"DEBUG: get_core_instance - Error cargando {value}: {e}")
-        elif key not in path_mapping.values():
+        elif key not in path_mapping.values() and key not in ['boms', 'stock', 'costs', 'sales_df', 'suppliers_df', 'historico_costos_df']:
             loaded_data[key] = value
     
     logging.info(f"DEBUG: get_core_instance - Datos finales cargados: {list(loaded_data.keys())}")
@@ -564,6 +566,18 @@ def get_core_instance():
         logging.info(f"DEBUG: get_core_instance - BOM final: {type(loaded_data['boms'])} con {len(loaded_data['boms']) if hasattr(loaded_data['boms'], '__len__') else 'N/A'} elementos")
     else:
         logging.warning("DEBUG: get_core_instance - BOM NO encontrado en datos finales")
+    
+    if 'suppliers_df' in loaded_data:
+        logging.info(f"DEBUG: get_core_instance - Suppliers_df final: {type(loaded_data['suppliers_df'])} con shape {loaded_data['suppliers_df'].shape if hasattr(loaded_data['suppliers_df'], 'shape') else 'N/A'}")
+        logging.info(f"DEBUG: get_core_instance - Suppliers_df vacío: {loaded_data['suppliers_df'].empty if hasattr(loaded_data['suppliers_df'], 'empty') else 'N/A'}")
+    else:
+        logging.warning("DEBUG: get_core_instance - Suppliers_df NO encontrado en datos finales")
+    
+    if 'sales_df' in loaded_data:
+        logging.info(f"DEBUG: get_core_instance - Sales_df final: {type(loaded_data['sales_df'])} con shape {loaded_data['sales_df'].shape if hasattr(loaded_data['sales_df'], 'shape') else 'N/A'}")
+        logging.info(f"DEBUG: get_core_instance - Sales_df vacío: {loaded_data['sales_df'].empty if hasattr(loaded_data['sales_df'], 'empty') else 'N/A'}")
+    else:
+        logging.warning("DEBUG: get_core_instance - Sales_df NO encontrado en datos finales")
     
     return CalculadoraCore(loaded_data)
 
@@ -1240,19 +1254,26 @@ def calculate_stock_equalization():
     selected_models_json = request.form.get('selected_models_equalization')
     print(f"DEBUG (Backend - Equilibrado): selected_models_json RAW received: '{selected_models_json}' (Type: {type(selected_models_json)})")
     print(f"DEBUG (Backend - Equilibrado): All form data: {dict(request.form)}")
+    print(f"DEBUG (Backend - Equilibrado): Content-Type: {request.content_type}")
+    print(f"DEBUG (Backend - Equilibrado): Request headers: {dict(request.headers)}")
 
     selected_models = []
-    if selected_models_json is None or not selected_models_json.strip():
-        print("DEBUG (Backend - Equilibrado): selected_models_json is None or empty/whitespace. Treating as no models selected.")
+    if selected_models_json is None:
+        print("DEBUG (Backend - Equilibrado): selected_models_json is None")
+        selected_models = []
+    elif not selected_models_json.strip():
+        print("DEBUG (Backend - Equilibrado): selected_models_json is empty/whitespace")
         selected_models = []
     else:
         try:
             # Limpiar el string de posibles caracteres extra
             cleaned_json = selected_models_json.strip()
             print(f"DEBUG (Backend - Equilibrado): Cleaned JSON string: '{cleaned_json}'")
+            print(f"DEBUG (Backend - Equilibrado): JSON string length: {len(cleaned_json)}")
             
             if isinstance(selected_models_json, list):
                 selected_models = selected_models_json
+                print("DEBUG (Backend - Equilibrado): selected_models_json is already a list")
             else:
                 decoded = json.loads(cleaned_json)
                 if isinstance(decoded, list):
@@ -1264,6 +1285,7 @@ def calculate_stock_equalization():
             print(f"DEBUG (Backend - Equilibrado): selected_models after decode: {selected_models} (Type: {type(selected_models)})")
         except json.JSONDecodeError as e:
             print(f"DEBUG (Backend - Equilibrado): JSONDecodeError al decodificar modelos: {e} - Input was: '{selected_models_json}'")
+            print(f"DEBUG (Backend - Equilibrado): Error position: line {e.lineno}, column {e.colno}")
             flash('Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido.', 'danger')
             return jsonify({'success': False, 'error': f'Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido: {str(e)}'})
         except Exception as e:
