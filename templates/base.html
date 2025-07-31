@@ -31,8 +31,8 @@
                     <i class="bi bi-gear-fill text-primary floating" style="font-size: 1.5rem;"></i>
                 </div>
                 <div>
-                    <h1 class="h5 mb-0 fw-bold animated-text">Sistema de Gestión de Fabricabilidad</h1>
-                    <small class="text-muted">Plataforma de Análisis Industrial</small>
+                    <h1 class="h5 mb-0 fw-bold animated-text" style="color: #3b82f6 !important; font-weight: 600 !important;">Sistema de Gestión de Fabricabilidad</h1>
+                    <small class="text-muted" style="color: #3b82f6 !important; font-weight: 500 !important;">Plataforma de Análisis Industrial</small>
                 </div>
             </div>
             
@@ -112,7 +112,7 @@
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar">
                 <div class="position-sticky">
                     <div class="px-3 mb-4">
-                        <h6 class="text-uppercase text-muted fw-bold mb-3 animated-text">Navegación</h6>
+                        <h6 class="text-uppercase text-muted fw-bold mb-3 animated-text" style="color: #3b82f6 !important; font-weight: 600 !important;">Navegación</h6>
                     </div>
                     
                     <ul class="nav flex-column">
@@ -165,16 +165,16 @@
                             </a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a class="nav-link morphing-card" id="tab-proveedores" href="#" onclick="showSection('proveedores')">
+                            <a class="nav-link morphing-card" id="tab-proveedores" href="#" onclick="showSection('proveedores')" style="color: #3b82f6 !important;">
                                 <i class="bi bi-truck"></i>
-                                <span>Gestión de Proveedores</span>
+                                <span style="color: #3b82f6 !important;">Gestión de Proveedores</span>
                             </a>
                         </li>
                         
                         {% if current_user.has_permission('user_management') %}
                         <li class="nav-item mt-4 mb-2">
                             <div class="px-3 mb-3">
-                                <h6 class="text-uppercase text-muted fw-bold mb-3 animated-text">Administración</h6>
+                                <h6 class="text-uppercase text-muted fw-bold mb-3 animated-text" style="color: #3b82f6 !important; font-weight: 600 !important;">Administración</h6>
                             </div>
                         </li>
                         <li class="nav-item mb-2">
@@ -190,7 +190,7 @@
                 <!-- Footer del sidebar - Separado del contenido principal -->
                 <div class="sidebar-footer">
                     <div class="text-center p-3">
-                        <small class="text-muted animated-text">v3.0 - Sistema Profesional</small>
+                        <small class="text-muted animated-text" style="color: #3b82f6 !important; font-weight: 600 !important;">v3.0 - Sistema Profesional</small>
                     </div>
                 </div>
             </nav>

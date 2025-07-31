@@ -1,7 +1,7 @@
 /*
  * Sistema de Gestión de Fabricabilidad - CSS Profesional
- * Versión: 3.7
- * Última actualización: 2025-07-31 17:30:00
+ * Versión: 3.8
+ * Última actualización: 2025-07-31 17:45:00
  * 
  * Este archivo contiene todos los estilos profesionales para la aplicación
  * Incluye: Variables CSS, Componentes, Efectos modernos, Responsive Design y Modo Oscuro/Claro
@@ -2310,6 +2310,77 @@ main {
 .sidebar .text-muted.fw-bold {
     color: #3b82f6 !important;
     font-weight: 600;
+}
+
+/* ========================================
+   FORZAR VISIBILIDAD - MÁXIMA ESPECIFICIDAD
+   ======================================== */
+
+/* Títulos del header - Forzar azul */
+.header-bar h1,
+.header-bar h2,
+.header-bar h3,
+.header-bar h4,
+.header-bar h5,
+.header-bar h6,
+.header-bar .animated-text,
+.header-bar small {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Sidebar - Títulos de secciones - Forzar azul */
+.sidebar .text-uppercase,
+.sidebar .text-muted,
+.sidebar .nav-link,
+.sidebar .nav-link span,
+.sidebar h6,
+.sidebar-footer small,
+.sidebar-footer .text-muted {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Override específico para elementos problemáticos */
+.sidebar .nav-item .text-uppercase,
+.sidebar .nav-item .text-muted,
+.sidebar .nav-item h6,
+.sidebar .nav-item small {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+}
+
+/* Footer del sidebar - Forzar azul */
+.sidebar-footer .animated-text,
+.sidebar-footer small,
+.sidebar-footer .text-muted {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+}
+
+/* ========================================
+   OVERRIDE FINAL - GARANTIZAR VISIBILIDAD
+   ======================================== */
+
+/* Cualquier elemento con estas clases será azul */
+.text-uppercase,
+.text-muted,
+.animated-text,
+small {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+}
+
+/* Específicamente para el sidebar */
+.sidebar * {
+    color: #3b82f6 !important;
+}
+
+/* Específicamente para el header */
+.header-bar * {
+    color: #3b82f6 !important;
 }
 
 
