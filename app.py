@@ -625,6 +625,16 @@ def index():
     logging.info(f"DEBUG: Estado de archivos en sesión: {list(calculadora_data_raw.keys())}")
     logging.info(f"DEBUG: historico_costos_loaded: {'historico_costos_df' in calculadora_data_raw}")
     logging.info(f"DEBUG: Context completo: {context}")
+    
+    # Logging detallado de las variables de estado
+    logging.info(f"DEBUG: Variables de estado:")
+    logging.info(f"  - bom_loaded: {context.get('bom_loaded', 'NO DEFINIDA')}")
+    logging.info(f"  - stock_loaded: {context.get('stock_loaded', 'NO DEFINIDA')}")
+    logging.info(f"  - cost_loaded: {context.get('cost_loaded', 'NO DEFINIDA')}")
+    logging.info(f"  - sales_loaded: {context.get('sales_loaded', 'NO DEFINIDA')}")
+    logging.info(f"  - suppliers_loaded: {context.get('suppliers_loaded', 'NO DEFINIDA')}")
+    logging.info(f"  - historico_costos_loaded: {context.get('historico_costos_loaded', 'NO DEFINIDA')}")
+    
     return render_template('index.html', **context)
 
 # --- NUEVAS RUTAS DE RESULTADOS ---
