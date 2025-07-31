@@ -490,7 +490,11 @@ def create_tables_and_roles():
 # --- FUNCIONES AUXILIARES (EXISTENTES) ---
 def get_core_instance():
     calculadora_data_raw = session.get('calculadora_core', {})
-    if not calculadora_data_raw: return None
+    logging.info(f"DEBUG: get_core_instance - datos en sesión: {list(calculadora_data_raw.keys())}")
+    
+    if not calculadora_data_raw: 
+        logging.warning("DEBUG: get_core_instance - No hay datos en sesión")
+        return None
     
     loaded_data = {}
     
@@ -508,6 +512,7 @@ def get_core_instance():
     for path_key, data_key in path_mapping.items():
         if path_key in calculadora_data_raw:
             file_path = calculadora_data_raw[path_key]
+            logging.info(f"DEBUG: get_core_instance - Procesando {path_key}: {file_path}")
             try:
                 if os.path.exists(file_path):
                     if file_path.endswith('.feather'):
@@ -515,11 +520,13 @@ def get_core_instance():
                     elif file_path.endswith('.pkl'):
                         with open(file_path, 'rb') as f:
                             loaded_data[data_key] = pickle.load(f)
-                    logging.info(f"Datos cargados desde {file_path} para {data_key}")
+                    logging.info(f"DEBUG: get_core_instance - Datos cargados desde {file_path} para {data_key}")
+                    if data_key == 'boms':
+                        logging.info(f"DEBUG: get_core_instance - BOM cargado: {type(loaded_data[data_key])} con {len(loaded_data[data_key]) if hasattr(loaded_data[data_key], '__len__') else 'N/A'} elementos")
                 else:
-                    logging.warning(f"Archivo no encontrado: {file_path}")
+                    logging.warning(f"DEBUG: get_core_instance - Archivo no encontrado: {file_path}")
             except Exception as e:
-                logging.error(f"Error cargando {file_path}: {e}")
+                logging.error(f"DEBUG: get_core_instance - Error cargando {file_path}: {e}")
     
     # También manejar datos que ya están en la sesión (compatibilidad)
     for key, value in calculadora_data_raw.items():
@@ -532,11 +539,17 @@ def get_core_instance():
                         with open(value, 'rb') as f: 
                             loaded_data[key] = pickle.load(f)
                 else:
-                    logging.warning(f"Archivo no encontrado: {value}")
+                    logging.warning(f"DEBUG: get_core_instance - Archivo no encontrado: {value}")
             except Exception as e:
-                logging.error(f"Error cargando {value}: {e}")
+                logging.error(f"DEBUG: get_core_instance - Error cargando {value}: {e}")
         elif key not in path_mapping.values():
             loaded_data[key] = value
+    
+    logging.info(f"DEBUG: get_core_instance - Datos finales cargados: {list(loaded_data.keys())}")
+    if 'boms' in loaded_data:
+        logging.info(f"DEBUG: get_core_instance - BOM final: {type(loaded_data['boms'])} con {len(loaded_data['boms']) if hasattr(loaded_data['boms'], '__len__') else 'N/A'} elementos")
+    else:
+        logging.warning("DEBUG: get_core_instance - BOM NO encontrado en datos finales")
     
     return CalculadoraCore(loaded_data)
 
@@ -984,10 +997,21 @@ def clear_data():
 @app.route('/calculate_individual', methods=['POST'])
 @login_required # Protege esta ruta
 def calculate_individual():
+    logging.info("DEBUG: calculate_individual - Iniciando cálculo individual")
+    
     calculadora_core = get_core_instance()
     if not calculadora_core:
+        logging.error("DEBUG: calculate_individual - No se pudo obtener instancia de calculadora")
         flash('No hay datos cargados o la sesión expiró. Por favor, recarga los archivos.', 'warning')
         return redirect(url_for('index'))
+
+    # Verificar si el BOM está cargado
+    if not hasattr(calculadora_core, 'boms') or not calculadora_core.boms:
+        logging.error("DEBUG: calculate_individual - BOM no encontrado en calculadora_core")
+        flash('Error: BOM no cargado. Por favor, recarga el archivo BOM.', 'danger')
+        return redirect(url_for('index'))
+    
+    logging.info(f"DEBUG: calculate_individual - BOM cargado: {type(calculadora_core.boms)} con {len(calculadora_core.boms) if hasattr(calculadora_core.boms, '__len__') else 'N/A'} elementos")
 
     model_name = request.form.get('model_name')
     desired_qty_str = request.form.get('desired_qty')
@@ -1005,6 +1029,8 @@ def calculate_individual():
         flash('La cantidad deseada debe ser un número entero válido.', 'danger')
         return redirect(url_for('index'))
 
+    logging.info(f"DEBUG: calculate_individual - Calculando para modelo: {model_name}, cantidad: {desired_qty}")
+    
     result = calculadora_core.calculate_individual_fabricability(model_name, desired_qty)
     
     session_id = session.get('session_id', str(uuid.uuid4()))
