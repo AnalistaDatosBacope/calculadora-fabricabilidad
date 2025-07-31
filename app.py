@@ -23,11 +23,16 @@ app = Flask(__name__)
 # ¡Cámbiala por una cadena aleatoria y compleja!
 app.secret_key = 'Laprida2375' # Usando la clave que me proporcionaste
 
-# Configuración de sesiones para Render.com
+# Configuración específica para Render.com
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
 app.config['SESSION_COOKIE_SECURE'] = True  # Para HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
+# Configuración específica para Render.com - Usar cookies en lugar de sesiones de archivos
+app.config['SESSION_TYPE'] = None  # Deshabilitar sesiones de archivos
+app.config['SESSION_USE_SIGNER'] = True  # Usar firmas para cookies
+app.config['SESSION_KEY_PREFIX'] = 'calculadora_'  # Prefijo para cookies
 
 # Configurar logging
 logging.basicConfig(
@@ -287,6 +292,59 @@ def get_file_status_from_cookies():
             if file_path and os.path.exists(file_path):
                 status[f"{file_type.replace('_file', '_loaded')}"] = True
                 status[f"{file_type.replace('_file', '_path')}"] = file_path
+    
+    return status
+
+def set_file_status_cookie(file_type, file_path, response):
+    """Establece cookies específicas para el estado de archivos en Render"""
+    try:
+        # Establecer cookie de estado
+        response.set_cookie(
+            f'{file_type}_loaded', 
+            'true', 
+            max_age=86400,  # 24 horas
+            secure=True,    # Solo HTTPS
+            httponly=True,  # No accesible por JavaScript
+            samesite='Lax' # Protección CSRF
+        )
+        
+        # Establecer cookie de ruta
+        response.set_cookie(
+            f'{file_type}_path', 
+            file_path, 
+            max_age=86400,
+            secure=True,
+            httponly=True,
+            samesite='Lax'
+        )
+        
+        logging.info(f"Cookie establecida para {file_type}: {file_path}")
+        return response
+    except Exception as e:
+        logging.error(f"Error estableciendo cookie para {file_type}: {e}")
+        return response
+
+def get_render_file_status():
+    """Función específica para Render.com - Obtiene estado desde cookies"""
+    status = {}
+    
+    # Mapeo de tipos de archivo a variables de estado
+    file_mapping = {
+        'bom_file': 'bom_loaded',
+        'stock_file': 'stock_loaded', 
+        'cost_file': 'cost_loaded',
+        'sales_file': 'sales_loaded',
+        'suppliers_file': 'suppliers_loaded',
+        'historico_costos_file': 'historico_costos_loaded'
+    }
+    
+    for file_type, state_var in file_mapping.items():
+        if request.cookies.get(f'{file_type}_loaded') == 'true':
+            file_path = request.cookies.get(f'{file_type}_path', '')
+            if file_path and os.path.exists(file_path):
+                status[state_var] = True
+                status[f"{state_var.replace('_loaded', '_path')}"] = file_path
+                logging.info(f"Archivo {file_type} encontrado en cookies: {file_path}")
     
     return status
 
@@ -557,10 +615,9 @@ def index():
 
                         flash(f'Archivo "{file.filename}" procesado correctamente.', 'success')
                         
-                        # Establecer cookie para persistencia
+                        # Establecer cookie para persistencia en Render
                         response = make_response(redirect(url_for('index')))
-                        response.set_cookie(f'{file_key}_loaded', 'true', max_age=86400)
-                        response.set_cookie(f'{file_key}_path', data_path, max_age=86400)
+                        response = set_file_status_cookie(file_key, data_path, response)
                         return response
                 except ValueError as ve:
                     flash(f'Error de formato en el archivo "{file.filename}": {ve}', 'danger')
@@ -585,6 +642,11 @@ def index():
                     
                     logging.info(f"DEBUG: Archivo guardado en: {data_path}")
                     flash(f'Archivo "{historico_costos_file.filename}" procesado correctamente.', 'success')
+                    
+                    # Establecer cookie para persistencia en Render
+                    response = make_response(redirect(url_for('index')))
+                    response = set_file_status_cookie('historico_costos_file', data_path, response)
+                    return response
                 else:
                     logging.error(f"DEBUG: parsed_data no es DataFrame: {type(parsed_data)}")
                     flash(f'Error: El archivo "{historico_costos_file.filename}" no contiene datos válidos.', 'danger')
@@ -626,14 +688,14 @@ def index():
         except Exception as e:
             logging.error(f"No se pudo cargar la lista de años/modelos desde el archivo de ventas cacheado: {e}")
 
-    # Obtener estado de archivos cargados desde base de datos
-    files_status = get_file_status_from_db()
+    # Obtener estado de archivos cargados - Función específica para Render
+    files_status = get_render_file_status()
     
-    # Si no hay datos en DB, usar cookies como fallback
+    # Si no hay datos en cookies, usar DB como fallback
     if not files_status:
-        files_status = get_file_status_from_cookies()
+        files_status = get_file_status_from_db()
     
-    # Si no hay datos en cookies, usar sesión como último fallback
+    # Si no hay datos en DB, usar sesión como último fallback
     if not files_status:
         files_status = get_loaded_files_status()
     
