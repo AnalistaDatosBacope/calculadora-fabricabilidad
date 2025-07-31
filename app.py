@@ -24,7 +24,6 @@ app = Flask(__name__)
 app.secret_key = 'Laprida2375' # Usando la clave que me proporcionaste
 
 # Configuración de sesiones para Render.com
-app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
 app.config['SESSION_COOKIE_SECURE'] = True  # Para HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
@@ -198,6 +197,18 @@ def make_session_permanent():
     """Hace la sesión permanente para persistir en Render.com"""
     session.permanent = True
     session.modified = True
+
+def get_loaded_files_status():
+    """Retorna el estado de los archivos cargados en la sesión"""
+    calculadora_data = session.get('calculadora_core', {})
+    return {
+        'bom_loaded': 'boms' in calculadora_data,
+        'stock_loaded': 'stock' in calculadora_data,
+        'cost_loaded': 'costs' in calculadora_data,
+        'sales_loaded': 'sales_df' in calculadora_data,
+        'suppliers_loaded': 'suppliers_df' in calculadora_data,
+        'historico_costos_loaded': 'historico_costos_df' in calculadora_data
+    }
 
 # --- PERMISOS DEFINIDOS ---
 PERMISSIONS = {
@@ -522,17 +533,20 @@ def index():
         except Exception as e:
             logging.error(f"No se pudo cargar la lista de años/modelos desde el archivo de ventas cacheado: {e}")
 
+    # Obtener estado de archivos cargados
+    files_status = get_loaded_files_status()
+    
     # Contexto para la plantilla
     context = {
         'model_options': model_options,
         'sales_years': sales_years,
-        'bom_loaded': 'boms' in calculadora_data_raw,
-        'stock_loaded': 'stock' in calculadora_data_raw,
+        'bom_loaded': files_status['bom_loaded'],
+        'stock_loaded': files_status['stock_loaded'],
         'lot_loaded': 'lots' in calculadora_data_raw, # Mantener por si se reintroduce la funcionalidad
-        'cost_loaded': 'costs' in calculadora_data_raw,
-        'sales_loaded': 'sales_df' in calculadora_data_raw,
-        'suppliers_loaded': 'suppliers_df' in calculadora_data_raw, # Nuevo estado para archivo de proveedores
-        'historico_costos_loaded': 'historico_costos_df' in calculadora_data_raw,
+        'cost_loaded': files_status['cost_loaded'],
+        'sales_loaded': files_status['sales_loaded'],
+        'suppliers_loaded': files_status['suppliers_loaded'],
+        'historico_costos_loaded': files_status['historico_costos_loaded'],
         'individual_result': session.get('individual_result_path'), # Ahora se guarda la ruta
         'lot_calculation_results': session.get('lot_results_path'), # Ahora se guarda la ruta
         'aggregate_purchase_suggestions': session.get('lot_suggestions_path'), # Ahora se guarda la ruta
