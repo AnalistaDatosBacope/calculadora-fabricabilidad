@@ -4,749 +4,437 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparación de Proveedores</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <!-- Select2 Bootstrap 5 Theme (para integrar mejor con el estilo de Bootstrap si se usa, aunque ahora es Tailwind) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <!-- Custom CSS (para estilos específicos no cubiertos por Tailwind o overrides) -->
+    <title>Gestión de Proveedores - Sistema de Fabricabilidad</title>
+    
+    <!-- Fuentes profesionales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Google Fonts - Inter (para una tipografía moderna y legible) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons CDN (para iconos modernos) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Estilos personalizados para el input de tipo archivo */
-        input[type="file"] {
-            display: none;
-        }
-
-        .custom-file-upload {
-            background-color: #6d28d9;
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        .custom-file-upload:hover {
-            background-color: #7c3aed;
-            transform: translateY(-1px);
-        }
-
-        .file-name-display {
-            color: #9ca3af;
-            font-size: 0.875rem;
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            min-width: 0;
-            padding-left: 0.5rem;
-        }
-
-        .file-status-icon {
-            flex-shrink: 0;
-        }
-
-        .card.disabled {
-            position: relative;
-            pointer-events: none;
-            opacity: 0.6;
-            filter: grayscale(80%);
-        }
-
-        .card.disabled .disabled-form-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-align: center;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .card.disabled > *:not(.disabled-form-overlay) {
-            opacity: 0.5;
-        }
-
-        .card {
-            animation: fadeInScale 0.5s ease-out forwards;
-            opacity: 0;
-            transform: scale(0.98);
-        }
-
-        @keyframes fadeInScale {
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .card:not(.disabled):hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        button[type="submit"], .btn {
-            transition: all 0.3s ease-in-out;
-        }
-
-        button[type="submit"]:hover, .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Estilos para tablas */
-        .table-container {
-            overflow-x: auto; /* Permite el scroll horizontal en tablas grandes */
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .table-auto {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-auto th, .table-auto td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #4a4a5a; /* Color de borde para celdas */
-        }
-
-        .table-auto th {
-            background-color: #3e3e70; /* Color de encabezado de tabla */
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-        }
-
-        .table-auto tbody tr:nth-child(odd) {
-            background-color: #2a2a4a; /* Color de fila impar */
-        }
-
-        .table-auto tbody tr:nth-child(even) {
-            background-color: #1a1a2e; /* Color de fila par */
-        }
-
-        .table-auto tbody tr:hover {
-            background-color: #4a4a6a; /* Color al pasar el ratón */
-        }
-
-        .table-auto .text-green-400 { color: #4ade80; }
-        .table-auto .text-yellow-400 { color: #facc15; }
-        .table-auto .text-red-400 { color: #f87171; }
-        .table-auto .text-blue-400 { color: #60a5fa; }
-        .table-auto .text-purple-400 { color: #c084fc; }
-    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏭</text></svg>">
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 font-inter antialiased min-h-screen flex flex-col">
-    <header class="bg-gray-800 shadow-lg py-4 px-6 flex justify-between items-center sticky top-0 z-50 border-b border-gray-700">
-        <h1 class="text-3xl font-bold text-white">Calculadora de Fabricabilidad y Demanda</h1>
-        <nav>
-            {% if current_user.is_authenticated %}
-                <span class="text-gray-300 mr-4">Bienvenido, {{ current_user.username }}</span>
-                <a href="{{ url_for('logout') }}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Cerrar Sesión</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mr-2">Iniciar Sesión</a>
-                <a href="{{ url_for('register') }}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Registrarse</a>
-            {% endif %}
-        </nav>
+<body>
+    <!-- Header Profesional -->
+    <header class="header-bar">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{{ url_for('index') }}" class="text-decoration-none me-3">
+                    <i class="bi bi-arrow-left text-primary" style="font-size: 1.25rem;"></i>
+                </a>
+                <div class="me-3">
+                    <i class="bi bi-truck text-primary" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <h1 class="h5 mb-0 fw-bold">Gestión de Proveedores</h1>
+                    <small class="text-muted">Análisis y comparación de proveedores</small>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <!-- Selector de Modo Oscuro/Claro -->
+                <div class="theme-toggle">
+                    <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" id="themeToggle" type="button">
+                        <i class="bi bi-sun-fill" id="themeIcon"></i>
+                        <span id="themeText">Modo Claro</span>
+                    </button>
+                </div>
+                
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-2" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                <i class="bi bi-person-fill text-white"></i>
+                            </div>
+                            <div class="text-start">
+                                <div class="fw-semibold">{{ current_user.get_full_name() }}</div>
+                                <small class="text-muted">{{ current_user.role.name }}</small>
+                            </div>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="min-width: 250px;">
+                        <li class="px-3 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="bi bi-person-fill text-white"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">{{ current_user.get_full_name() }}</div>
+                                    <small class="text-muted">{{ current_user.email }}</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="{{ url_for('index') }}">
+                                <i class="bi bi-house me-3"></i>
+                                <div>
+                                    <div class="fw-medium">Volver al Dashboard</div>
+                                    <small class="text-muted">Ir a la página principal</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2 text-danger" href="{{ url_for('logout') }}">
+                                <i class="bi bi-box-arrow-right me-3"></i>
+                                <div>
+                                    <div class="fw-medium">Cerrar Sesión</div>
+                                    <small class="text-muted">Salir del sistema</small>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </header>
 
-    <main class="container mx-auto p-8 flex-grow">
-        <h1 class="text-3xl font-bold text-white mb-6 flex items-center">
-            <i data-lucide="truck" class="w-8 h-8 mr-3 text-green-400"></i> Comparación de Proveedores
-        </h1>
+    <!-- Contenido Principal Centrado -->
+    <div class="main-content-wrapper">
+        <div class="main-content-container">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Gestión de Proveedores</li>
+                </ol>
+            </nav>
 
-        <!-- Filtros (opcional, si se implementa en JS/Flask) -->
-        <div class="bg-gray-800 rounded-xl shadow-lg p-6 mb-8 flex flex-wrap gap-4 items-end">
-            <div class="flex-grow">
-                <label for="articleFilter" class="block text-gray-300 text-sm font-bold mb-1">Filtrar por Artículo:</label>
-                <select id="articleFilter" class="form-select w-full">
-                    <option value="all">Todos los Artículos</option>
-                    {% for article in unique_articles %}
-                        <option value="{{ article }}">{{ article }}</option>
-                    {% endfor %}
-                </select>
+                <!-- Filtros de Proveedores -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-funnel"></i> Filtros de Búsqueda
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="supplierFilter" class="form-label">Filtrar por Proveedor</label>
+                                <select id="supplierFilter" class="form-select">
+                                    <option value="">Todos los proveedores</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="articleFilter" class="form-label">Filtrar por Artículo</label>
+                                <select id="articleFilter" class="form-select">
+                                    <option value="">Todos los artículos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button id="applyFilters" class="btn btn-primary me-2">
+                                    <i class="bi bi-search me-2"></i>Aplicar Filtros
+                                </button>
+                                <button id="clearFilters" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>Limpiar Filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-list-ul text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 id="totalRecords">0</h4>
+                                    <p class="mb-0">Registros Totales</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-building text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 id="uniqueSuppliers">0</h4>
+                                    <p class="mb-0">Proveedores Únicos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-box text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 id="uniqueArticles">0</h4>
+                                    <p class="mb-0">Artículos Únicos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Resultados -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-table"></i> Resultados de la Búsqueda
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-primary" id="resultsCount">0 resultados</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Artículo</th>
+                                        <th>Descripción</th>
+                                        <th>Código</th>
+                                        <th>Proveedor</th>
+                                        <th>Precio</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="suppliersTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                                            <p class="mt-2 mb-0">No hay datos para mostrar</p>
+                                            <small>Carga archivos de proveedores para comenzar</small>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Adicional -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-info-circle"></i> Información del Sistema
+                            </div>
+                            <div class="card-body">
+                                <h6>Funcionalidades Disponibles:</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Filtrado por proveedor específico
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Filtrado por artículo específico
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Identificación automática del mejor precio
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Estadísticas en tiempo real
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-lightbulb"></i> Consejos de Uso
+                            </div>
+                            <div class="card-body">
+                                <h6>Para obtener mejores resultados:</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="bi bi-arrow-right text-primary me-2"></i>
+                                        Usa los filtros para encontrar proveedores específicos
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-arrow-right text-primary me-2"></i>
+                                        Compara precios entre diferentes proveedores
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-arrow-right text-primary me-2"></i>
+                                        Identifica el proveedor con mejor precio por artículo
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-arrow-right text-primary me-2"></i>
+                                        Revisa las estadísticas para tomar decisiones informadas
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex-grow">
-                <label for="supplierFilter" class="block text-gray-300 text-sm font-bold mb-1">Filtrar por Proveedor:</label>
-                <select id="supplierFilter" class="form-select w-full">
-                    <option value="all">Todos los Proveedores</option>
-                    {# Las opciones de proveedores se cargarán dinámicamente con JS si es necesario #}
-                </select>
-            </div>
-            <button id="applyFilters" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center">
-                <i data-lucide="filter" class="w-5 h-5 mr-2"></i> Aplicar Filtros
-            </button>
-            <button id="resetFilters" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center">
-                <i data-lucide="rotate-ccw" class="w-5 h-5 mr-2"></i> Resetear Filtros
-            </button>
         </div>
+    </div>
 
-        <!-- Tabla de Proveedores -->
-        {% if suppliers_data %}
-            <div class="table-container">
-                <table id="suppliersTable" class="table-auto w-full text-left text-gray-300">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-3">Artículo</th>
-                            <th class="px-4 py-3">Descripción</th>
-                            <th class="px-4 py-3">Código</th>
-                            <th class="px-4 py-3">Razón Social</th>
-                            <th class="px-4 py-3">Precio</th>
-                            <th class="px-4 py-3">Mejor Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in suppliers_data %}
-                            <tr class="hover:bg-gray-700 transition-colors duration-200">
-                                <td class="px-4 py-3">{{ item.articulo }}</td>
-                                <td class="px-4 py-3">{{ item.descripcion }}</td>
-                                <td class="px-4 py-3">{{ item.codigo }}</td>
-                                <td class="px-4 py-3">{{ item.razon_social }}</td>
-                                <td class="px-4 py-3 text-right">{{ "%.2f"|format(item.precio) }}</td>
-                                <td class="px-4 py-3 text-center">
-                                    {% if item.precio == item.min_price %}
-                                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 inline-block"></i>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="text-center mt-6">
-                <form action="{{ url_for('generate_report') }}" method="post" class="inline-block">
-                    <input type="hidden" name="report_type" value="suppliers">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center">
-                        <i data-lucide="download" class="w-5 h-5 mr-2"></i> Descargar Informe Excel
-                    </button>
-                </form>
-            </div>
-        {% else %}
-            <p class="text-center text-gray-400 text-lg mt-8">No hay datos de proveedores cargados. Por favor, carga el archivo de proveedores desde la página principal.</p>
-        {% endif %}
-
-        <div class="text-center mt-8">
-            <a href="{{ url_for('index') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Volver a la Página Principal</a>
-        </div>
-    </main>
-
-    <footer class="bg-gray-800 shadow-inner py-4 px-6 text-center text-gray-400 text-sm mt-8">
-        <p>&copy; {{ current_year }} Calculadora de Fabricabilidad. Todos los derechos reservados.</p>
-    </footer>
-
-    <!-- jQuery (para Select2) -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
     <script>
-        // Inicializar Lucide Icons después de que el DOM esté cargado
-        document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
-
-            // Inicializar Select2 para los filtros
-            $('#articleFilter').select2({
+        // Inicialización específica para la página de proveedores
+        $(document).ready(function() {
+            // Inicializar Select2
+            $('#supplierFilter, #articleFilter').select2({
                 theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: "Filtrar por Artículo",
+                placeholder: 'Selecciona una opción',
                 allowClear: true
             });
 
-            $('#supplierFilter').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: "Filtrar por Proveedor",
-                allowClear: true
+            // Cargar datos iniciales
+            loadFilteredData();
+            populateSupplierFilter();
+
+            // Event listeners
+            $('#applyFilters').click(function() {
+                loadFilteredData();
             });
 
-            // Lógica de filtrado en el lado del cliente (si no se hace en el servidor)
-            const suppliersData = {{ suppliers_data | tojson }}; // Datos de proveedores pasados desde Flask
-            const suppliersTableBody = document.querySelector('#suppliersTable tbody');
-            const articleFilter = document.getElementById('articleFilter');
-            const supplierFilter = document.getElementById('supplierFilter');
-            const applyFiltersBtn = document.getElementById('applyFilters');
-            const resetFiltersBtn = document.getElementById('resetFilters');
-
-            // Función para renderizar la tabla
-            function renderTable(data) {
-                suppliersTableBody.innerHTML = ''; // Limpiar tabla existente
-                if (data.length === 0) {
-                    suppliersTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No se encontraron resultados para los filtros aplicados.</td></tr>';
-                    return;
-                }
-
-                // Calcular el precio mínimo por artículo para mostrar la estrella
-                const minPrices = {};
-                data.forEach(item => {
-                    if (!(item.articulo in minPrices) || item.precio < minPrices[item.articulo]) {
-                        minPrices[item.articulo] = item.precio;
-                    }
-                });
-
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.classList.add('hover:bg-gray-700', 'transition-colors', 'duration-200');
-
-                    row.innerHTML = `
-                        <td class="px-4 py-3">${item.articulo}</td>
-                        <td class="px-4 py-3">${item.descripcion}</td>
-                        <td class="px-4 py-3">${item.codigo}</td>
-                        <td class="px-4 py-3">${item.razon_social}</td>
-                        <td class="px-4 py-3 text-right">${item.precio.toFixed(2)}</td>
-                        <td class="px-4 py-3 text-center">
-                            ${item.precio === minPrices[item.articulo] ? '<i data-lucide="star" class="w-5 h-5 text-yellow-400 inline-block"></i>' : ''}
-                        </td>
-                    `;
-                    suppliersTableBody.appendChild(row);
-                });
-                lucide.createIcons({ attrs: { class: 'w-5 h-5' }, container: suppliersTableBody }); // Re-renderizar iconos en nuevas filas
-            }
-
-            // Función para poblar el filtro de proveedores
-            function populateSupplierFilter(data) {
-                const uniqueSuppliers = [...new Set(data.map(item => item.razon_social))].sort();
-                supplierFilter.innerHTML = '<option value="all">Todos los Proveedores</option>';
-                uniqueSuppliers.forEach(supplier => {
-                    const option = document.createElement('option');
-                    option.value = supplier;
-                    option.textContent = supplier;
-                    supplierFilter.appendChild(option);
-                });
-                $(supplierFilter).trigger('change.select2'); // Notificar a Select2 del cambio
-            }
-
-            // Aplicar filtros
-            applyFiltersBtn.addEventListener('click', function() {
-                const selectedArticle = articleFilter.value;
-                const selectedSupplier = supplierFilter.value;
-
-                let filteredData = suppliersData;
-
-                if (selectedArticle !== 'all') {
-                    filteredData = filteredData.filter(item => item.articulo === selectedArticle);
-                }
-                if (selectedSupplier !== 'all') {
-                    filteredData = filteredData.filter(item => item.razon_social === selectedSupplier);
-                }
-                renderTable(filteredData);
+            $('#clearFilters').click(function() {
+                $('#supplierFilter, #articleFilter').val('').trigger('change');
+                loadFilteredData();
             });
-
-            // Resetear filtros
-            resetFiltersBtn.addEventListener('click', function() {
-                $(articleFilter).val('all').trigger('change.select2');
-                $(supplierFilter).val('all').trigger('change.select2');
-                renderTable(suppliersData);
-            });
-
-            // Cargar la tabla y los filtros al inicio
-            if (suppliersData && suppliersData.length > 0) {
-                renderTable(suppliersData);
-                populateSupplierFilter(suppliersData);
-            } else {
-                suppliersTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No hay datos de proveedores cargados.</td></tr>';
-            }
         });
-    </script>
-</body>
-</html>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparación de Proveedores</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <!-- Select2 Bootstrap 5 Theme (para integrar mejor con el estilo de Bootstrap si se usa, aunque ahora es Tailwind) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <!-- Custom CSS (para estilos específicos no cubiertos por Tailwind o overrides) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Google Fonts - Inter (para una tipografía moderna y legible) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons CDN (para iconos modernos) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Estilos personalizados para el input de tipo archivo */
-        input[type="file"] {
-            display: none;
-        }
-
-        .custom-file-upload {
-            background-color: #6d28d9;
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        .custom-file-upload:hover {
-            background-color: #7c3aed;
-            transform: translateY(-1px);
-        }
-
-        .file-name-display {
-            color: #9ca3af;
-            font-size: 0.875rem;
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            min-width: 0;
-            padding-left: 0.5rem;
-        }
-
-        .file-status-icon {
-            flex-shrink: 0;
-        }
-
-        .card.disabled {
-            position: relative;
-            pointer-events: none;
-            opacity: 0.6;
-            filter: grayscale(80%);
-        }
-
-        .card.disabled .disabled-form-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-align: center;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .card.disabled > *:not(.disabled-form-overlay) {
-            opacity: 0.5;
-        }
-
-        .card {
-            animation: fadeInScale 0.5s ease-out forwards;
-            opacity: 0;
-            transform: scale(0.98);
-        }
-
-        @keyframes fadeInScale {
-            to {
-                opacity: 1;
-                transform: scale(1);
+        // Función para cargar datos filtrados
+        async function loadFilteredData() {
+            const selectedArticle = $('#articleFilter').val();
+            const selectedSupplier = $('#supplierFilter').val();
+            
+            const params = new URLSearchParams();
+            if (selectedArticle) params.append('article', selectedArticle);
+            if (selectedSupplier) params.append('supplier', selectedSupplier);
+            
+            try {
+                const response = await fetch(`/api/suppliers/filter?${params.toString()}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderTable(result.data);
+                    updateStats(result.data);
+                } else {
+                    showError('Error al cargar los datos: ' + result.error);
+                }
+            } catch (error) {
+                showError('Error de conexión: ' + error.message);
             }
         }
 
-        .card:not(.disabled):hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        button[type="submit"], .btn {
-            transition: all 0.3s ease-in-out;
-        }
-
-        button[type="submit"]:hover, .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Estilos para tablas */
-        .table-container {
-            overflow-x: auto; /* Permite el scroll horizontal en tablas grandes */
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .table-auto {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-auto th, .table-auto td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #4a4a5a; /* Color de borde para celdas */
-        }
-
-        .table-auto th {
-            background-color: #3e3e70; /* Color de encabezado de tabla */
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-        }
-
-        .table-auto tbody tr:nth-child(odd) {
-            background-color: #2a2a4a; /* Color de fila impar */
-        }
-
-        .table-auto tbody tr:nth-child(even) {
-            background-color: #1a1a2e; /* Color de fila par */
-        }
-
-        .table-auto tbody tr:hover {
-            background-color: #4a4a6a; /* Color al pasar el ratón */
-        }
-
-        .table-auto .text-green-400 { color: #4ade80; }
-        .table-auto .text-yellow-400 { color: #facc15; }
-        .table-auto .text-red-400 { color: #f87171; }
-        .table-auto .text-blue-400 { color: #60a5fa; }
-        .table-auto .text-purple-400 { color: #c084fc; }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 font-inter antialiased min-h-screen flex flex-col">
-    <header class="bg-gray-800 shadow-lg py-4 px-6 flex justify-between items-center sticky top-0 z-50 border-b border-gray-700">
-        <h1 class="text-3xl font-bold text-white">Calculadora de Fabricabilidad y Demanda</h1>
-        <nav>
-            {% if current_user.is_authenticated %}
-                <span class="text-gray-300 mr-4">Bienvenido, {{ current_user.username }}</span>
-                <a href="{{ url_for('logout') }}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Cerrar Sesión</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mr-2">Iniciar Sesión</a>
-                <a href="{{ url_for('register') }}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Registrarse</a>
-            {% endif %}
-        </nav>
-    </header>
-
-    <main class="container mx-auto p-8 flex-grow">
-        <h1 class="text-3xl font-bold text-white mb-6 flex items-center">
-            <i data-lucide="truck" class="w-8 h-8 mr-3 text-green-400"></i> Comparación de Proveedores
-        </h1>
-
-        <!-- Filtros (opcional, si se implementa en JS/Flask) -->
-        <div class="bg-gray-800 rounded-xl shadow-lg p-6 mb-8 flex flex-wrap gap-4 items-end">
-            <div class="flex-grow">
-                <label for="articleFilter" class="block text-gray-300 text-sm font-bold mb-1">Filtrar por Artículo:</label>
-                <select id="articleFilter" class="form-select w-full">
-                    <option value="all">Todos los Artículos</option>
-                    {% for article in unique_articles %}
-                        <option value="{{ article }}">{{ article }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="flex-grow">
-                <label for="supplierFilter" class="block text-gray-300 text-sm font-bold mb-1">Filtrar por Proveedor:</label>
-                <select id="supplierFilter" class="form-select w-full">
-                    <option value="all">Todos los Proveedores</option>
-                    {# Las opciones de proveedores se cargarán dinámicamente con JS si es necesario #}
-                </select>
-            </div>
-            <button id="applyFilters" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center">
-                <i data-lucide="filter" class="w-5 h-5 mr-2"></i> Aplicar Filtros
-            </button>
-            <button id="resetFilters" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center">
-                <i data-lucide="rotate-ccw" class="w-5 h-5 mr-2"></i> Resetear Filtros
-            </button>
-        </div>
-
-        <!-- Tabla de Proveedores -->
-        {% if suppliers_data %}
-            <div class="table-container">
-                <table id="suppliersTable" class="table-auto w-full text-left text-gray-300">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-3">Artículo</th>
-                            <th class="px-4 py-3">Descripción</th>
-                            <th class="px-4 py-3">Código</th>
-                            <th class="px-4 py-3">Razón Social</th>
-                            <th class="px-4 py-3">Precio</th>
-                            <th class="px-4 py-3">Mejor Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in suppliers_data %}
-                            <tr class="hover:bg-gray-700 transition-colors duration-200">
-                                <td class="px-4 py-3">{{ item.articulo }}</td>
-                                <td class="px-4 py-3">{{ item.descripcion }}</td>
-                                <td class="px-4 py-3">{{ item.codigo }}</td>
-                                <td class="px-4 py-3">{{ item.razon_social }}</td>
-                                <td class="px-4 py-3 text-right">{{ "%.2f"|format(item.precio) }}</td>
-                                <td class="px-4 py-3 text-center">
-                                    {% if item.precio == item.min_price %}
-                                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 inline-block"></i>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="text-center mt-6">
-                <form action="{{ url_for('generate_report') }}" method="post" class="inline-block">
-                    <input type="hidden" name="report_type" value="suppliers">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center">
-                        <i data-lucide="download" class="w-5 h-5 mr-2"></i> Descargar Informe Excel
-                    </button>
-                </form>
-            </div>
-        {% else %}
-            <p class="text-center text-gray-400 text-lg mt-8">No hay datos de proveedores cargados. Por favor, carga el archivo de proveedores desde la página principal.</p>
-        {% endif %}
-
-        <div class="text-center mt-8">
-            <a href="{{ url_for('index') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Volver a la Página Principal</a>
-        </div>
-    </main>
-
-    <footer class="bg-gray-800 shadow-inner py-4 px-6 text-center text-gray-400 text-sm mt-8">
-        <p>&copy; {{ current_year }} Calculadora de Fabricabilidad. Todos los derechos reservados.</p>
-    </footer>
-
-    <!-- jQuery (para Select2) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- Custom JS -->
-    <script>
-        // Inicializar Lucide Icons después de que el DOM esté cargado
-        document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
-
-            // Inicializar Select2 para los filtros
-            $('#articleFilter').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: "Filtrar por Artículo",
-                allowClear: true
-            });
-
-            $('#supplierFilter').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: "Filtrar por Proveedor",
-                allowClear: true
-            });
-
-            // Lógica de filtrado en el lado del cliente (si no se hace en el servidor)
-            const suppliersData = {{ suppliers_data | tojson }}; // Datos de proveedores pasados desde Flask
-            const suppliersTableBody = document.querySelector('#suppliersTable tbody');
-            const articleFilter = document.getElementById('articleFilter');
-            const supplierFilter = document.getElementById('supplierFilter');
-            const applyFiltersBtn = document.getElementById('applyFilters');
-            const resetFiltersBtn = document.getElementById('resetFilters');
-
-            // Función para renderizar la tabla
-            function renderTable(data) {
-                suppliersTableBody.innerHTML = ''; // Limpiar tabla existente
-                if (data.length === 0) {
-                    suppliersTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No se encontraron resultados para los filtros aplicados.</td></tr>';
-                    return;
-                }
-
-                // Calcular el precio mínimo por artículo para mostrar la estrella
-                const minPrices = {};
-                data.forEach(item => {
-                    if (!(item.articulo in minPrices) || item.precio < minPrices[item.articulo]) {
-                        minPrices[item.articulo] = item.precio;
-                    }
-                });
-
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.classList.add('hover:bg-gray-700', 'transition-colors', 'duration-200');
-
-                    row.innerHTML = `
-                        <td class="px-4 py-3">${item.articulo}</td>
-                        <td class="px-4 py-3">${item.descripcion}</td>
-                        <td class="px-4 py-3">${item.codigo}</td>
-                        <td class="px-4 py-3">${item.razon_social}</td>
-                        <td class="px-4 py-3 text-right">${item.precio.toFixed(2)}</td>
-                        <td class="px-4 py-3 text-center">
-                            ${item.precio === minPrices[item.articulo] ? '<i data-lucide="star" class="w-5 h-5 text-yellow-400 inline-block"></i>' : ''}
+        // Función para renderizar la tabla
+        function renderTable(data) {
+            const tbody = $('#suppliersTableBody');
+            tbody.empty();
+            
+            if (data.length === 0) {
+                tbody.append(`
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0">No se encontraron resultados</p>
+                            <small>Intenta con diferentes filtros</small>
                         </td>
-                    `;
-                    suppliersTableBody.appendChild(row);
-                });
-                lucide.createIcons({ attrs: { class: 'w-5 h-5' }, container: suppliersTableBody }); // Re-renderizar iconos en nuevas filas
+                    </tr>
+                `);
+                return;
             }
-
-            // Función para poblar el filtro de proveedores
-            function populateSupplierFilter(data) {
-                const uniqueSuppliers = [...new Set(data.map(item => item.razon_social))].sort();
-                supplierFilter.innerHTML = '<option value="all">Todos los Proveedores</option>';
-                uniqueSuppliers.forEach(supplier => {
-                    const option = document.createElement('option');
-                    option.value = supplier;
-                    option.textContent = supplier;
-                    supplierFilter.appendChild(option);
-                });
-                $(supplierFilter).trigger('change.select2'); // Notificar a Select2 del cambio
-            }
-
-            // Aplicar filtros
-            applyFiltersBtn.addEventListener('click', function() {
-                const selectedArticle = articleFilter.value;
-                const selectedSupplier = supplierFilter.value;
-
-                let filteredData = suppliersData;
-
-                if (selectedArticle !== 'all') {
-                    filteredData = filteredData.filter(item => item.articulo === selectedArticle);
+            
+            // Encontrar el mejor precio por artículo
+            const bestPrices = {};
+            data.forEach(item => {
+                if (!bestPrices[item.articulo] || item.precio < bestPrices[item.articulo]) {
+                    bestPrices[item.articulo] = item.precio;
                 }
-                if (selectedSupplier !== 'all') {
-                    filteredData = filteredData.filter(item => item.razon_social === selectedSupplier);
+            });
+            
+            data.forEach(item => {
+                const isBestPrice = bestPrices[item.articulo] === item.precio;
+                const row = `
+                    <tr>
+                        <td>
+                            <strong>${item.articulo}</strong>
+                        </td>
+                        <td>${item.descripcion}</td>
+                        <td><code>${item.codigo}</code></td>
+                        <td>${item.razon_social}</td>
+                        <td>
+                            <span class="fw-bold">$${item.precio.toLocaleString()}</span>
+                            ${isBestPrice ? '<span class="badge bg-success ms-2">Mejor Precio</span>' : ''}
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">Disponible</span>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+            
+            $('#resultsCount').text(`${data.length} resultados`);
+        }
+
+        // Función para actualizar estadísticas
+        function updateStats(data) {
+            const uniqueSuppliers = new Set(data.map(item => item.razon_social)).size;
+            const uniqueArticles = new Set(data.map(item => item.articulo)).size;
+            
+            $('#totalRecords').text(data.length);
+            $('#uniqueSuppliers').text(uniqueSuppliers);
+            $('#uniqueArticles').text(uniqueArticles);
+        }
+
+        // Función para poblar el filtro de proveedores
+        async function populateSupplierFilter() {
+            try {
+                const response = await fetch('/api/suppliers/filter');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const suppliers = [...new Set(result.data.map(item => item.razon_social))].sort();
+                    const select = $('#supplierFilter');
+                    
+                    suppliers.forEach(supplier => {
+                        select.append(new Option(supplier, supplier));
+                    });
                 }
-                renderTable(filteredData);
-            });
-
-            // Resetear filtros
-            resetFiltersBtn.addEventListener('click', function() {
-                $(articleFilter).val('all').trigger('change.select2');
-                $(supplierFilter).val('all').trigger('change.select2');
-                renderTable(suppliersData);
-            });
-
-            // Cargar la tabla y los filtros al inicio
-            if (suppliersData && suppliersData.length > 0) {
-                renderTable(suppliersData);
-                populateSupplierFilter(suppliersData);
-            } else {
-                suppliersTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No hay datos de proveedores cargados.</td></tr>';
+            } catch (error) {
+                console.error('Error al cargar proveedores:', error);
             }
-        });
+        }
+
+        // Función para mostrar errores
+        function showError(message) {
+            // Crear alerta de error
+            const alert = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            // Insertar al inicio del contenido principal
+            $('main').prepend(alert);
+        }
     </script>
 </body>
 </html>

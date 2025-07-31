@@ -733,7 +733,7 @@ window.updateFormStates = function() {
 // Función para mostrar secciones (mover a global scope)
 window.showSection = function(section) {
     console.log('DEBUG: showSection llamado con:', section);
-    const sections = ['dashboard', 'carga', 'fabricabilidad', 'demanda', 'equilibrado', 'costo_total', 'costos', 'analisis', 'admin'];
+    const sections = ['dashboard', 'carga', 'fabricabilidad', 'demanda', 'equilibrado', 'costo_total', 'costos', 'analisis', 'proveedores', 'admin'];
     sections.forEach(s => {
         const sectionElement = document.getElementById('section-' + s);
         // Corregir el nombre del tab para costo_total
@@ -770,6 +770,12 @@ window.showSection = function(section) {
     if (section === 'analisis') {
         console.log('DEBUG: Inicializando análisis de ventas');
         initializeSalesAnalysis();
+    }
+    
+    // Inicializar gestión de proveedores si es la sección activa
+    if (section === 'proveedores') {
+        console.log('DEBUG: Inicializando gestión de proveedores');
+        // La gestión de proveedores se maneja en una página separada
     }
     
     // Inicializar administración si es la sección activa
@@ -1472,7 +1478,7 @@ function updateDetailsTable(details) {
 // Inicializar análisis de ventas cuando se active la sección
 window.showSection = function(section) {
     console.log('DEBUG: showSection llamado con:', section);
-    const sections = ['dashboard', 'carga', 'fabricabilidad', 'demanda', 'equilibrado', 'costo_total', 'costos', 'analisis', 'admin'];
+    const sections = ['dashboard', 'carga', 'fabricabilidad', 'demanda', 'equilibrado', 'costo_total', 'costos', 'analisis', 'proveedores', 'admin'];
     sections.forEach(s => {
         const sectionElement = document.getElementById('section-' + s);
         // Corregir el nombre del tab para costo_total
@@ -1509,6 +1515,12 @@ window.showSection = function(section) {
     if (section === 'analisis') {
         console.log('DEBUG: Inicializando análisis de ventas');
         initializeSalesAnalysis();
+    }
+    
+    // Inicializar gestión de proveedores si es la sección activa
+    if (section === 'proveedores') {
+        console.log('DEBUG: Inicializando gestión de proveedores');
+        // La gestión de proveedores se maneja en una página separada
     }
     
     // Inicializar administración si es la sección activa
@@ -2769,3 +2781,80 @@ function showAlert(type, message) {
         }
     }, 5000);
 }
+
+// ========================================
+// SISTEMA DE MODO OSCURO/CLARO
+// ========================================
+
+// Función para cambiar el tema
+function toggleTheme() {
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    
+    // Obtener el tema actual
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    
+    // Cambiar al tema opuesto
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Aplicar el nuevo tema
+    html.setAttribute('data-theme', newTheme);
+    
+    // Actualizar el icono y texto
+    if (newTheme === 'dark') {
+        themeIcon.className = 'bi bi-moon-fill';
+        themeText.textContent = 'Modo Oscuro';
+    } else {
+        themeIcon.className = 'bi bi-sun-fill';
+        themeText.textContent = 'Modo Claro';
+    }
+    
+    // Guardar en localStorage
+    localStorage.setItem('theme', newTheme);
+    
+    // Aplicar transición suave
+    document.body.style.transition = 'all 0.3s ease';
+    setTimeout(() => {
+        document.body.style.transition = '';
+    }, 300);
+}
+
+// Función para inicializar el tema
+function initializeTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    
+    // Aplicar el tema guardado
+    html.setAttribute('data-theme', savedTheme);
+    
+    // Actualizar el icono y texto si existen
+    if (themeIcon && themeText) {
+        if (savedTheme === 'dark') {
+            themeIcon.className = 'bi bi-moon-fill';
+            themeText.textContent = 'Modo Oscuro';
+        } else {
+            themeIcon.className = 'bi bi-sun-fill';
+            themeText.textContent = 'Modo Claro';
+        }
+    }
+}
+
+// Event listener para el botón de cambio de tema
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar el tema
+    initializeTheme();
+    
+    // Agregar event listener al botón de tema
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Resto del código existente...
+    initializeSelect2();
+    initializeCharts();
+    setupEventListeners();
+});

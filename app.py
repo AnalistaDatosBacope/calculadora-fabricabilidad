@@ -1027,26 +1027,53 @@ def get_models():
         return jsonify({'success': False, 'error': str(e), 'models': []})
 
 
-@app.route('/clear_data', methods=['POST'])
+@app.route('/clear_data', methods=['GET', 'POST'])
 @login_required # Protege esta ruta
 def clear_data():
+    logging.info("DEBUG: clear_data - Iniciando limpieza de datos")
+    logging.info(f"DEBUG: clear_data - Método de petición: {request.method}")
+    
     cache_folder = app.config['DATA_CACHE_FOLDER']
+    logging.info(f"DEBUG: clear_data - Carpeta de caché: {cache_folder}")
+    
     if 'session_id' in session:
         session_id = session['session_id']
+        logging.info(f"DEBUG: clear_data - Session ID: {session_id}")
+        
+        # Limpiar archivos de caché
+        files_removed = 0
         for item in os.listdir(cache_folder):
             if item.startswith(session_id):
                 try:
-                    os.remove(os.path.join(cache_folder, item))
+                    file_path = os.path.join(cache_folder, item)
+                    os.remove(file_path)
+                    files_removed += 1
+                    logging.info(f"DEBUG: clear_data - Archivo eliminado: {item}")
                 except Exception as e:
-                    pass # No mostrar error al usuario si no es crítico
-    session.pop('calculadora_core', None) # Solo borra los datos de la calculadora, no toda la sesión
-    session.pop('individual_result_path', None) # Limpiar la ruta
-    session.pop('lot_results_path', None) # Limpiar la ruta
-    session.pop('lot_suggestions_path', None) # Limpiar la ruta
-    session.pop('demand_results_path', None)
-    session.pop('equalization_results_path', None) # Limpiar también el resultado de equilibrado
-    session.pop('suppliers_data_path', None) # Limpiar también los datos de proveedores
-    session.pop('model_full_cost_result_path', None) # Nuevo: Limpiar resultado de costo total de modelo
+                    logging.error(f"DEBUG: clear_data - Error eliminando archivo {item}: {e}")
+        
+        logging.info(f"DEBUG: clear_data - Archivos eliminados: {files_removed}")
+    else:
+        logging.warning("DEBUG: clear_data - No hay session_id en la sesión")
+    
+    # Limpiar datos de sesión
+    session_keys_to_remove = [
+        'calculadora_core',
+        'individual_result_path',
+        'lot_results_path', 
+        'lot_suggestions_path',
+        'demand_results_path',
+        'equalization_results_path',
+        'suppliers_data_path',
+        'model_full_cost_result_path'
+    ]
+    
+    for key in session_keys_to_remove:
+        if key in session:
+            session.pop(key, None)
+            logging.info(f"DEBUG: clear_data - Sesión limpiada: {key}")
+    
+    logging.info("DEBUG: clear_data - Limpieza completada")
     flash('Todos los datos de la sesión y la caché han sido eliminados.', 'info')
     return redirect(url_for('index'))
 
@@ -1415,6 +1442,49 @@ def view_suppliers():
     return render_template('suppliers_comparison.html', 
                            suppliers_data=suppliers_data,
                            unique_articles=unique_articles)
+
+@app.route('/api/suppliers/filter')
+@login_required
+def api_filter_suppliers():
+    """API para filtrar proveedores por artículo o proveedor"""
+    try:
+        core = get_core_instance()
+        if not core or core.suppliers_df.empty:
+            return jsonify({'error': 'No hay datos de proveedores cargados'}), 400
+        
+        # Obtener parámetros de filtro
+        selected_supplier = request.args.get('supplier', '')
+        selected_article = request.args.get('article', '')
+        
+        # Aplicar filtros
+        filtered_df = core.suppliers_df.copy()
+        
+        if selected_supplier:
+            filtered_df = filtered_df[filtered_df['razon_social'] == selected_supplier]
+        
+        if selected_article:
+            filtered_df = filtered_df[filtered_df['articulo'] == selected_article]
+        
+        # Convertir a formato para la tabla
+        suppliers_data = []
+        for _, row in filtered_df.iterrows():
+            suppliers_data.append({
+                'articulo': row['articulo'],
+                'descripcion': row['descripcion'],
+                'codigo': row['codigo'],
+                'razon_social': row['razon_social'],
+                'precio': float(row['precio']) if pd.notna(row['precio']) else 0.0
+            })
+        
+        return jsonify({
+            'success': True,
+            'data': suppliers_data,
+            'total_records': len(suppliers_data)
+        })
+        
+    except Exception as e:
+        logging.error(f"Error en api_filter_suppliers: {e}")
+        return jsonify({'error': f'Error al filtrar proveedores: {str(e)}'}), 500
 
 # --- NUEVA RUTA PARA CALCULAR EL COSTO TOTAL DE UN MODELO ---
 @app.route('/calculate_model_full_cost', methods=['POST'])
