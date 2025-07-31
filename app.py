@@ -957,31 +957,59 @@ def get_models():
     try:
         calculadora_data_raw = session.get('calculadora_core', {})
         model_options = []
-        boms_data = calculadora_data_raw.get('boms', {})
-        if isinstance(boms_data, str) and boms_data.endswith('.pkl'):
+        
+        # Cargar BOM desde archivo si existe
+        boms_path = calculadora_data_raw.get('boms_path')
+        if boms_path and isinstance(boms_path, str) and os.path.exists(boms_path):
             try:
-                if os.path.exists(boms_data):
-                    with open(boms_data, 'rb') as f:
-                        loaded_boms = pickle.load(f)
-                    model_options = list(loaded_boms.keys())
+                with open(boms_path, 'rb') as f:
+                    loaded_boms = pickle.load(f)
+                model_options = list(loaded_boms.keys())
+                print(f"DEBUG: /api/models - Modelos cargados desde BOM: {len(model_options)}")
             except Exception as e:
                 print(f"Error al cargar los modelos desde el archivo BOM cacheado para /api/models: {e}")
-        elif isinstance(boms_data, dict):
-            model_options = list(boms_data.keys())
         
         # También añadimos los modelos de venta si existen
-        sales_data_path = calculadora_data_raw.get('sales_df')
+        sales_data_path = calculadora_data_raw.get('sales_df_path')
         if sales_data_path and isinstance(sales_data_path, str) and os.path.exists(sales_data_path):
             try:
                 sales_df = pd.read_feather(sales_data_path)
                 if not sales_df.empty and 'COD_PROD' in sales_df.columns:
-                    model_options.extend(sales_df['COD_PROD'].unique())
+                    sales_models = sales_df['COD_PROD'].unique().tolist()
+                    model_options.extend(sales_models)
+                    print(f"DEBUG: /api/models - Modelos cargados desde ventas: {len(sales_models)}")
             except Exception as e:
                 print(f"Error al cargar los modelos desde el archivo de ventas cacheado para /api/models: {e}")
 
+        # Compatibilidad con formato anterior
+        if not model_options:
+            boms_data = calculadora_data_raw.get('boms', {})
+            if isinstance(boms_data, str) and boms_data.endswith('.pkl'):
+                try:
+                    if os.path.exists(boms_data):
+                        with open(boms_data, 'rb') as f:
+                            loaded_boms = pickle.load(f)
+                        model_options = list(loaded_boms.keys())
+                except Exception as e:
+                    print(f"Error al cargar los modelos desde el archivo BOM cacheado (formato anterior): {e}")
+            elif isinstance(boms_data, dict):
+                model_options = list(boms_data.keys())
+            
+            # También añadimos los modelos de venta si existen (formato anterior)
+            sales_data_path = calculadora_data_raw.get('sales_df')
+            if sales_data_path and isinstance(sales_data_path, str) and os.path.exists(sales_data_path):
+                try:
+                    sales_df = pd.read_feather(sales_data_path)
+                    if not sales_df.empty and 'COD_PROD' in sales_df.columns:
+                        model_options.extend(sales_df['COD_PROD'].unique())
+                except Exception as e:
+                    print(f"Error al cargar los modelos desde el archivo de ventas cacheado (formato anterior): {e}")
+
         model_options = sorted(list(set(model_options))) # Eliminar duplicados y ordenar
+        print(f"DEBUG: /api/models - Total de modelos únicos: {len(model_options)}")
         return jsonify({'success': True, 'models': model_options})
     except Exception as e:
+        print(f"Error en /api/models: {e}")
         return jsonify({'success': False, 'error': str(e), 'models': []})
 
 
