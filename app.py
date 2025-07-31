@@ -1197,6 +1197,7 @@ def calculate_stock_equalization():
 
     selected_models_json = request.form.get('selected_models_equalization')
     print(f"DEBUG (Backend - Equilibrado): selected_models_json RAW received: '{selected_models_json}' (Type: {type(selected_models_json)})")
+    print(f"DEBUG (Backend - Equilibrado): All form data: {dict(request.form)}")
 
     selected_models = []
     if selected_models_json is None or not selected_models_json.strip():
@@ -1204,10 +1205,14 @@ def calculate_stock_equalization():
         selected_models = []
     else:
         try:
+            # Limpiar el string de posibles caracteres extra
+            cleaned_json = selected_models_json.strip()
+            print(f"DEBUG (Backend - Equilibrado): Cleaned JSON string: '{cleaned_json}'")
+            
             if isinstance(selected_models_json, list):
                 selected_models = selected_models_json
             else:
-                decoded = json.loads(selected_models_json)
+                decoded = json.loads(cleaned_json)
                 if isinstance(decoded, list):
                     selected_models = decoded
                 elif isinstance(decoded, str):
@@ -1215,10 +1220,14 @@ def calculate_stock_equalization():
                 else:
                     selected_models = []
             print(f"DEBUG (Backend - Equilibrado): selected_models after decode: {selected_models} (Type: {type(selected_models)})")
-        except Exception as e:
-            print(f"DEBUG (Backend - Equilibrado): Error al decodificar modelos: {e} - Input was: '{selected_models_json}'")
+        except json.JSONDecodeError as e:
+            print(f"DEBUG (Backend - Equilibrado): JSONDecodeError al decodificar modelos: {e} - Input was: '{selected_models_json}'")
             flash('Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido.', 'danger')
-            return jsonify({'success': False, 'error': 'Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido.'})
+            return jsonify({'success': False, 'error': f'Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido: {str(e)}'})
+        except Exception as e:
+            print(f"DEBUG (Backend - Equilibrado): Error inesperado al decodificar modelos: {e} - Input was: '{selected_models_json}'")
+            flash('Error inesperado al procesar los modelos seleccionados para el equilibrado.', 'danger')
+            return jsonify({'success': False, 'error': f'Error inesperado al procesar los modelos seleccionados: {str(e)}'})
     
     start_date_str = request.form.get('start_date_equalization')
     end_date_str = request.form.get('end_date_equalization')
