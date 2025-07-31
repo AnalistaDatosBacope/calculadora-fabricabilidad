@@ -344,29 +344,24 @@ def get_render_file_status():
                 status[state_var] = True
                 status[f"{state_var.replace('_loaded', '_path')}"] = file_path
                 
-                # Cargar datos en la sesión para que estén disponibles en todas las pestañas
-                try:
-                    if file_type == 'bom_file':
-                        with open(file_path, 'rb') as f:
-                            session_data['boms'] = pickle.load(f)
-                    elif file_type == 'stock_file':
-                        with open(file_path, 'rb') as f:
-                            session_data['stock'] = pickle.load(f)
-                    elif file_type == 'cost_file':
-                        with open(file_path, 'rb') as f:
-                            session_data['costs'] = pickle.load(f)
-                    elif file_type == 'sales_file':
-                        session_data['sales_df'] = pd.read_feather(file_path)
-                    elif file_type == 'suppliers_file':
-                        session_data['suppliers_df'] = pd.read_feather(file_path)
-                    elif file_type == 'historico_costos_file':
-                        session_data['historico_costos_df'] = pd.read_feather(file_path)
-                    
-                    logging.info(f"Archivo {file_type} cargado en sesión desde: {file_path}")
-                except Exception as e:
-                    logging.error(f"Error cargando {file_type} en sesión: {e}")
+                # Solo guardar las rutas de archivos en la sesión, NO los datos completos
+                # Los datos se cargarán cuando sean necesarios
+                if file_type == 'bom_file':
+                    session_data['boms_path'] = file_path
+                elif file_type == 'stock_file':
+                    session_data['stock_path'] = file_path
+                elif file_type == 'cost_file':
+                    session_data['costs_path'] = file_path
+                elif file_type == 'sales_file':
+                    session_data['sales_df_path'] = file_path
+                elif file_type == 'suppliers_file':
+                    session_data['suppliers_df_path'] = file_path
+                elif file_type == 'historico_costos_file':
+                    session_data['historico_costos_df_path'] = file_path
+                
+                logging.info(f"Archivo {file_type} ruta guardada en sesión: {file_path}")
     
-    # Actualizar la sesión
+    # Actualizar la sesión (solo con rutas, no con datos completos)
     session['calculadora_core'] = session_data
     session.modified = True
     
@@ -496,19 +491,53 @@ def create_tables_and_roles():
 def get_core_instance():
     calculadora_data_raw = session.get('calculadora_core', {})
     if not calculadora_data_raw: return None
+    
     loaded_data = {}
+    
+    # Mapeo de rutas de archivos a claves de datos
+    path_mapping = {
+        'boms_path': 'boms',
+        'stock_path': 'stock', 
+        'costs_path': 'costs',
+        'sales_df_path': 'sales_df',
+        'suppliers_df_path': 'suppliers_df',
+        'historico_costos_df_path': 'historico_costos_df'
+    }
+    
+    # Cargar datos desde rutas de archivos
+    for path_key, data_key in path_mapping.items():
+        if path_key in calculadora_data_raw:
+            file_path = calculadora_data_raw[path_key]
+            try:
+                if os.path.exists(file_path):
+                    if file_path.endswith('.feather'):
+                        loaded_data[data_key] = pd.read_feather(file_path)
+                    elif file_path.endswith('.pkl'):
+                        with open(file_path, 'rb') as f:
+                            loaded_data[data_key] = pickle.load(f)
+                    logging.info(f"Datos cargados desde {file_path} para {data_key}")
+                else:
+                    logging.warning(f"Archivo no encontrado: {file_path}")
+            except Exception as e:
+                logging.error(f"Error cargando {file_path}: {e}")
+    
+    # También manejar datos que ya están en la sesión (compatibilidad)
     for key, value in calculadora_data_raw.items():
-        if isinstance(value, str) and (value.endswith('.feather') or value.endswith('.pkl')):
+        if key not in path_mapping.values() and isinstance(value, str) and (value.endswith('.feather') or value.endswith('.pkl')):
             try:
                 if os.path.exists(value):
-                    if value.endswith('.feather'): loaded_data[key] = pd.read_feather(value)
+                    if value.endswith('.feather'): 
+                        loaded_data[key] = pd.read_feather(value)
                     elif value.endswith('.pkl'):
-                        with open(value, 'rb') as f: loaded_data[key] = pickle.load(f)
+                        with open(value, 'rb') as f: 
+                            loaded_data[key] = pickle.load(f)
                 else:
-                    flash(f"Error: El archivo cacheado {value} no fue encontrado.", "danger"); return None
+                    logging.warning(f"Archivo no encontrado: {value}")
             except Exception as e:
-                flash(f"Error crítico al leer el archivo de datos {value}: {e}", "danger"); return None
-        else: loaded_data[key] = value
+                logging.error(f"Error cargando {value}: {e}")
+        elif key not in path_mapping.values():
+            loaded_data[key] = value
+    
     return CalculadoraCore(loaded_data)
 
 # --- RUTAS DE AUTENTICACIÓN ---
