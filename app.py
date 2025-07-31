@@ -135,7 +135,19 @@ class UserActivity(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return f"UserActivity('{self.user.username}', '{self.action}', '{self.timestamp}')"
+        return f"UserActivity('{self.action}', '{self.timestamp}')"
+
+class UserFileStatus(db.Model):
+    """Modelo para almacenar el estado de archivos cargados por usuario"""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='file_status')
+    file_type = db.Column(db.String(50), nullable=False)  # bom, stock, costs, sales, suppliers, historico
+    file_path = db.Column(db.String(500), nullable=False)  # Ruta del archivo guardado
+    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"UserFileStatus('{self.file_type}', '{self.uploaded_at}')"
 
 # --- FUNCIÓN DE CARGA DE USUARIO PARA FLASK-LOGIN ---
 # Esta función es requerida por Flask-Login para recargar el usuario desde la sesión
@@ -209,6 +221,49 @@ def get_loaded_files_status():
         'suppliers_loaded': 'suppliers_df' in calculadora_data,
         'historico_costos_loaded': 'historico_costos_df' in calculadora_data
     }
+
+def save_file_status_to_db(file_type, file_path):
+    """Guarda el estado de un archivo cargado en la base de datos"""
+    if current_user.is_authenticated:
+        try:
+            # Eliminar registro anterior si existe
+            UserFileStatus.query.filter_by(
+                user_id=current_user.id, 
+                file_type=file_type
+            ).delete()
+            
+            # Crear nuevo registro
+            file_status = UserFileStatus(
+                user_id=current_user.id,
+                file_type=file_type,
+                file_path=file_path
+            )
+            db.session.add(file_status)
+            db.session.commit()
+            logging.info(f"Archivo {file_type} guardado en DB para usuario {current_user.id}")
+        except Exception as e:
+            logging.error(f"Error guardando estado de archivo en DB: {e}")
+
+def get_file_status_from_db():
+    """Obtiene el estado de archivos cargados desde la base de datos"""
+    if not current_user.is_authenticated:
+        return {}
+    
+    try:
+        file_statuses = UserFileStatus.query.filter_by(user_id=current_user.id).all()
+        status = {}
+        for fs in file_statuses:
+            if os.path.exists(fs.file_path):
+                status[f"{fs.file_type}_loaded"] = True
+                status[f"{fs.file_type}_path"] = fs.file_path
+            else:
+                # Si el archivo no existe, eliminar el registro
+                db.session.delete(fs)
+        db.session.commit()
+        return status
+    except Exception as e:
+        logging.error(f"Error obteniendo estado de archivos desde DB: {e}")
+        return {}
 
 # --- PERMISOS DEFINIDOS ---
 PERMISSIONS = {
@@ -471,6 +526,9 @@ def index():
                             data_path = os.path.join(app.config['DATA_CACHE_FOLDER'], data_filename)
                             with open(data_path, 'wb') as f: pickle.dump(parsed_data, f)
                             session_data[data_key] = data_path
+                        
+                        # Guardar estado en base de datos
+                        save_file_status_to_db(file_key, data_path)
 
                         flash(f'Archivo "{file.filename}" procesado correctamente.', 'success')
                 except ValueError as ve:
@@ -490,6 +548,10 @@ def index():
                     data_path = os.path.join(app.config['DATA_CACHE_FOLDER'], data_filename)
                     parsed_data.reset_index(drop=True).to_feather(data_path)
                     session_data['historico_costos_df'] = data_path
+                    
+                    # Guardar estado en base de datos
+                    save_file_status_to_db('historico_costos_file', data_path)
+                    
                     logging.info(f"DEBUG: Archivo guardado en: {data_path}")
                     flash(f'Archivo "{historico_costos_file.filename}" procesado correctamente.', 'success')
                 else:
@@ -533,8 +595,12 @@ def index():
         except Exception as e:
             logging.error(f"No se pudo cargar la lista de años/modelos desde el archivo de ventas cacheado: {e}")
 
-    # Obtener estado de archivos cargados
-    files_status = get_loaded_files_status()
+    # Obtener estado de archivos cargados desde base de datos
+    files_status = get_file_status_from_db()
+    
+    # Si no hay datos en DB, usar sesión como fallback
+    if not files_status:
+        files_status = get_loaded_files_status()
     
     # Contexto para la plantilla
     context = {
