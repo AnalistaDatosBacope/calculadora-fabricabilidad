@@ -4145,3 +4145,137 @@
 2025-07-31 09:43:44,365 - INFO -  * Restarting with stat
 2025-07-31 09:43:46,030 - WARNING -  * Debugger is active!
 2025-07-31 09:43:46,033 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:20:39,265 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:20:39,449 - INFO -  * Restarting with stat
+2025-07-31 10:20:40,940 - WARNING -  * Debugger is active!
+2025-07-31 10:20:40,943 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:20:56,522 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:20:56,679 - INFO -  * Restarting with stat
+2025-07-31 10:20:58,302 - WARNING -  * Debugger is active!
+2025-07-31 10:20:58,305 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:21:25,495 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:21:25,839 - INFO -  * Restarting with stat
+2025-07-31 10:21:27,968 - WARNING -  * Debugger is active!
+2025-07-31 10:21:27,971 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:27:35,056 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.72:5000
+2025-07-31 10:27:35,056 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-31 10:27:35,058 - INFO -  * Restarting with stat
+2025-07-31 10:27:36,683 - WARNING -  * Debugger is active!
+2025-07-31 10:27:36,685 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:27:37,039 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 10:27:37,040 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 10:27:37,040 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': 'data_cache\\23579292-a519-4c4b-b9c0-6a45a1f1aa76_model_full_cost_result.pkl', 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 10:27:37,040 - INFO - DEBUG: Variables de estado:
+2025-07-31 10:27:37,040 - INFO -   - bom_loaded: True
+2025-07-31 10:27:37,041 - INFO -   - stock_loaded: True
+2025-07-31 10:27:37,041 - INFO -   - cost_loaded: True
+2025-07-31 10:27:37,041 - INFO -   - sales_loaded: True
+2025-07-31 10:27:37,042 - INFO -   - suppliers_loaded: True
+2025-07-31 10:27:37,042 - INFO -   - historico_costos_loaded: True
+2025-07-31 10:27:37,068 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "GET / HTTP/1.1" 200 -
+2025-07-31 10:27:37,084 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-07-31 10:27:37,091 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-07-31 10:27:37,267 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-31 10:27:37,270 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 10:27:37,278 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 10:27:37,763 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 10:27:37,766 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 10:27:37,766 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 10:27:37,785 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 10:27:37,786 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 10:27:37,786 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 10:27:37,786 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 10:27:37,811 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 10:27:37,812 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:37] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 10:27:43,181 - INFO - DEBUG: Request method is POST.
+2025-07-31 10:27:43,182 - INFO - DEBUG: request.files content: ImmutableMultiDict([('bom_file', <FileStorage: '' ('application/octet-stream')>), ('stock_file', <FileStorage: '' ('application/octet-stream')>), ('lot_file', <FileStorage: '' ('application/octet-stream')>), ('cost_file', <FileStorage: '' ('application/octet-stream')>), ('historico_costos_file', <FileStorage: '' ('application/octet-stream')>), ('sales_file', <FileStorage: '' ('application/octet-stream')>), ('suppliers_file', <FileStorage: '' ('application/octet-stream')>)])
+2025-07-31 10:27:43,182 - INFO - DEBUG: Session ID: 23579292-a519-4c4b-b9c0-6a45a1f1aa76
+2025-07-31 10:27:43,183 - INFO - DEBUG: Processing file_key: bom_file, file object: <FileStorage: '' ('application/octet-stream')>, filename: None
+2025-07-31 10:27:43,183 - INFO - DEBUG: Processing file_key: stock_file, file object: <FileStorage: '' ('application/octet-stream')>, filename: None
+2025-07-31 10:27:43,183 - INFO - DEBUG: Processing file_key: lot_file, file object: <FileStorage: '' ('application/octet-stream')>, filename: None
+2025-07-31 10:27:43,183 - INFO - DEBUG: Processing file_key: cost_file, file object: <FileStorage: '' ('application/octet-stream')>, filename: None
+2025-07-31 10:27:43,183 - INFO - DEBUG: Processing file_key: sales_file, file object: <FileStorage: '' ('application/octet-stream')>, filename: None
+2025-07-31 10:27:43,184 - INFO - DEBUG: Processing file_key: suppliers_file, file object: <FileStorage: '' ('application/octet-stream')>, filename: None
+2025-07-31 10:27:43,184 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-07-31 10:27:43,212 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 10:27:43,213 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 10:27:43,213 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': 'data_cache\\23579292-a519-4c4b-b9c0-6a45a1f1aa76_model_full_cost_result.pkl', 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 10:27:43,214 - INFO - DEBUG: Variables de estado:
+2025-07-31 10:27:43,214 - INFO -   - bom_loaded: True
+2025-07-31 10:27:43,214 - INFO -   - stock_loaded: True
+2025-07-31 10:27:43,215 - INFO -   - cost_loaded: True
+2025-07-31 10:27:43,215 - INFO -   - sales_loaded: True
+2025-07-31 10:27:43,215 - INFO -   - suppliers_loaded: True
+2025-07-31 10:27:43,215 - INFO -   - historico_costos_loaded: True
+2025-07-31 10:27:43,219 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "GET / HTTP/1.1" 200 -
+2025-07-31 10:27:43,241 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-07-31 10:27:43,242 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-07-31 10:27:43,305 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 10:27:43,308 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 10:27:43,797 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 10:27:43,801 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 10:27:43,801 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 10:27:43,816 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 10:27:43,817 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 10:27:43,817 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 10:27:43,817 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 10:27:43,834 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 10:27:43,835 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:43] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 10:27:46,768 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:46] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 10:27:46,810 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:46] "GET /api/sales_data?year=&period=year&models= HTTP/1.1" 200 -
+2025-07-31 10:27:50,309 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:50] "[35m[1mGET /api/sales_data?year=&period=year&models=B90 HTTP/1.1[0m" 500 -
+2025-07-31 10:27:51,968 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:51] "[35m[1mGET /api/sales_data?year=&period=year&models=B90,B96 HTTP/1.1[0m" 500 -
+2025-07-31 10:27:53,447 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:53] "GET /api/sales_data?year=2021&period=year&models=B90,B96 HTTP/1.1" 200 -
+2025-07-31 10:27:54,368 - INFO - 127.0.0.1 - - [31/Jul/2025 10:27:54] "GET /api/sales_analysis?year=2021&period=year&models=B90,B96 HTTP/1.1" 200 -
+2025-07-31 10:28:00,865 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 10:28:00,871 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 10:28:00,872 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 10:28:00,889 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 10:28:00,889 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 10:28:00,890 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 10:28:00,890 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 10:28:00,909 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 10:28:00,910 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:00] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 10:28:05,057 - INFO - DEBUG: Iniciando análisis de estacionalidad
+2025-07-31 10:28:05,061 - INFO - DEBUG: Datos de ventas cargados para estacionalidad: (13447, 4)
+2025-07-31 10:28:05,629 - INFO - DEBUG: Iniciando predicción de ventas
+2025-07-31 10:28:05,636 - INFO - DEBUG: Datos de ventas cargados para predicción: (13447, 4)
+2025-07-31 10:28:11,376 - INFO - DEBUG: Análisis de estacionalidad completado exitosamente
+2025-07-31 10:28:11,378 - INFO - DEBUG: Predicción de ventas completada exitosamente
+2025-07-31 10:28:11,379 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:11] "GET /api/seasonal_analysis HTTP/1.1" 200 -
+2025-07-31 10:28:11,380 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:11] "GET /api/sales_forecast HTTP/1.1" 200 -
+2025-07-31 10:28:16,988 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:16] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 10:28:17,035 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:17] "GET /api/sales_data?year=2021&period=year&models= HTTP/1.1" 200 -
+2025-07-31 10:28:23,803 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:23] "GET /api/sales_data?year=2021&period=year&models=B90 HTTP/1.1" 200 -
+2025-07-31 10:28:24,346 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:24] "GET /api/sales_analysis?year=2021&period=year&models=B90 HTTP/1.1" 200 -
+2025-07-31 10:28:26,613 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 10:28:26,617 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 10:28:26,617 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 10:28:26,634 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 10:28:26,634 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 10:28:26,634 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 10:28:26,635 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 10:28:26,655 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 10:28:26,658 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:26] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 10:28:30,337 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:30] "GET /api/admin/roles HTTP/1.1" 200 -
+2025-07-31 10:28:30,340 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:30] "GET /api/admin/activity HTTP/1.1" 200 -
+2025-07-31 10:28:30,347 - INFO - 127.0.0.1 - - [31/Jul/2025 10:28:30] "GET /api/admin/users HTTP/1.1" 200 -
+2025-07-31 10:30:43,015 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:30:43,293 - INFO -  * Restarting with stat
+2025-07-31 10:30:44,971 - WARNING -  * Debugger is active!
+2025-07-31 10:30:44,974 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:31:12,235 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:31:12,380 - INFO -  * Restarting with stat
+2025-07-31 10:31:13,868 - WARNING -  * Debugger is active!
+2025-07-31 10:31:13,871 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:36:59,043 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:36:59,208 - INFO -  * Restarting with stat
+2025-07-31 10:37:00,808 - WARNING -  * Debugger is active!
+2025-07-31 10:37:00,811 - INFO -  * Debugger PIN: 117-951-363
+2025-07-31 10:37:26,687 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\app.py', reloading
+2025-07-31 10:37:26,912 - INFO -  * Restarting with stat
+2025-07-31 10:37:29,327 - WARNING -  * Debugger is active!
+2025-07-31 10:37:29,331 - INFO -  * Debugger PIN: 117-951-363
