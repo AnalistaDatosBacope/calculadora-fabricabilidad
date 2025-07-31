@@ -323,8 +323,9 @@ def set_file_status_cookie(file_type, file_path, response):
         return response
 
 def get_render_file_status():
-    """Función específica para Render.com - Obtiene estado desde cookies"""
+    """Función específica para Render.com - Obtiene estado desde cookies y carga datos en sesión"""
     status = {}
+    session_data = session.get('calculadora_core', {})
     
     # Mapeo de tipos de archivo a variables de estado
     file_mapping = {
@@ -342,7 +343,32 @@ def get_render_file_status():
             if file_path and os.path.exists(file_path):
                 status[state_var] = True
                 status[f"{state_var.replace('_loaded', '_path')}"] = file_path
-                logging.info(f"Archivo {file_type} encontrado en cookies: {file_path}")
+                
+                # Cargar datos en la sesión para que estén disponibles en todas las pestañas
+                try:
+                    if file_type == 'bom_file':
+                        with open(file_path, 'rb') as f:
+                            session_data['boms'] = pickle.load(f)
+                    elif file_type == 'stock_file':
+                        with open(file_path, 'rb') as f:
+                            session_data['stock'] = pickle.load(f)
+                    elif file_type == 'cost_file':
+                        with open(file_path, 'rb') as f:
+                            session_data['costs'] = pickle.load(f)
+                    elif file_type == 'sales_file':
+                        session_data['sales_df'] = pd.read_feather(file_path)
+                    elif file_type == 'suppliers_file':
+                        session_data['suppliers_df'] = pd.read_feather(file_path)
+                    elif file_type == 'historico_costos_file':
+                        session_data['historico_costos_df'] = pd.read_feather(file_path)
+                    
+                    logging.info(f"Archivo {file_type} cargado en sesión desde: {file_path}")
+                except Exception as e:
+                    logging.error(f"Error cargando {file_type} en sesión: {e}")
+    
+    # Actualizar la sesión
+    session['calculadora_core'] = session_data
+    session.modified = True
     
     return status
 
