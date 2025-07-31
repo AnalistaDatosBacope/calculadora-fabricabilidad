@@ -265,6 +265,31 @@ def get_file_status_from_db():
         logging.error(f"Error obteniendo estado de archivos desde DB: {e}")
         return {}
 
+def set_file_cookie(file_type, file_path):
+    """Establece una cookie específica para un archivo cargado"""
+    try:
+        response = make_response(redirect(url_for('index')))
+        response.set_cookie(f'{file_type}_loaded', 'true', max_age=86400)  # 24 horas
+        response.set_cookie(f'{file_type}_path', file_path, max_age=86400)
+        return response
+    except Exception as e:
+        logging.error(f"Error estableciendo cookie para {file_type}: {e}")
+        return redirect(url_for('index'))
+
+def get_file_status_from_cookies():
+    """Obtiene el estado de archivos desde cookies"""
+    status = {}
+    file_types = ['bom_file', 'stock_file', 'cost_file', 'sales_file', 'suppliers_file', 'historico_costos_file']
+    
+    for file_type in file_types:
+        if request.cookies.get(f'{file_type}_loaded') == 'true':
+            file_path = request.cookies.get(f'{file_type}_path', '')
+            if file_path and os.path.exists(file_path):
+                status[f"{file_type.replace('_file', '_loaded')}"] = True
+                status[f"{file_type.replace('_file', '_path')}"] = file_path
+    
+    return status
+
 # --- PERMISOS DEFINIDOS ---
 PERMISSIONS = {
     'dashboard_view': 'Ver dashboard ejecutivo',
@@ -531,6 +556,12 @@ def index():
                         save_file_status_to_db(file_key, data_path)
 
                         flash(f'Archivo "{file.filename}" procesado correctamente.', 'success')
+                        
+                        # Establecer cookie para persistencia
+                        response = make_response(redirect(url_for('index')))
+                        response.set_cookie(f'{file_key}_loaded', 'true', max_age=86400)
+                        response.set_cookie(f'{file_key}_path', data_path, max_age=86400)
+                        return response
                 except ValueError as ve:
                     flash(f'Error de formato en el archivo "{file.filename}": {ve}', 'danger')
                 except Exception as e:
@@ -598,7 +629,11 @@ def index():
     # Obtener estado de archivos cargados desde base de datos
     files_status = get_file_status_from_db()
     
-    # Si no hay datos en DB, usar sesión como fallback
+    # Si no hay datos en DB, usar cookies como fallback
+    if not files_status:
+        files_status = get_file_status_from_cookies()
+    
+    # Si no hay datos en cookies, usar sesión como último fallback
     if not files_status:
         files_status = get_loaded_files_status()
     
