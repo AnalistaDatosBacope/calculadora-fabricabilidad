@@ -3981,3 +3981,167 @@
 2025-07-31 09:27:01,506 - INFO - 127.0.0.1 - - [31/Jul/2025 09:27:01] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
 2025-07-31 09:27:01,563 - INFO - 127.0.0.1 - - [31/Jul/2025 09:27:01] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
 2025-07-31 09:27:01,595 - INFO - 127.0.0.1 - - [31/Jul/2025 09:27:01] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-07-31 09:32:10,940 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 09:32:10,940 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 09:32:10,941 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': None, 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 09:32:10,941 - INFO - DEBUG: Variables de estado:
+2025-07-31 09:32:10,941 - INFO -   - bom_loaded: True
+2025-07-31 09:32:10,941 - INFO -   - stock_loaded: True
+2025-07-31 09:32:10,942 - INFO -   - cost_loaded: True
+2025-07-31 09:32:10,942 - INFO -   - sales_loaded: True
+2025-07-31 09:32:10,942 - INFO -   - suppliers_loaded: True
+2025-07-31 09:32:10,942 - INFO -   - historico_costos_loaded: True
+2025-07-31 09:32:10,955 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:10] "GET / HTTP/1.1" 200 -
+2025-07-31 09:32:10,982 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:10] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-07-31 09:32:10,985 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:10] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-07-31 09:32:11,103 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:11] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 09:32:11,119 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:11] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:32:11,121 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:11] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-31 09:32:11,598 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:32:11,601 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:32:11,601 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:32:11,657 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:32:11,657 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:32:11,658 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:32:11,658 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:32:11,690 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:32:11,691 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:11] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:32:15,783 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 09:32:15,784 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 09:32:15,784 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': None, 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 09:32:15,785 - INFO - DEBUG: Variables de estado:
+2025-07-31 09:32:15,785 - INFO -   - bom_loaded: True
+2025-07-31 09:32:15,785 - INFO -   - stock_loaded: True
+2025-07-31 09:32:15,785 - INFO -   - cost_loaded: True
+2025-07-31 09:32:15,785 - INFO -   - sales_loaded: True
+2025-07-31 09:32:15,786 - INFO -   - suppliers_loaded: True
+2025-07-31 09:32:15,786 - INFO -   - historico_costos_loaded: True
+2025-07-31 09:32:15,790 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:15] "GET / HTTP/1.1" 200 -
+2025-07-31 09:32:15,806 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:15] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-07-31 09:32:15,811 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:15] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-07-31 09:32:15,861 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:15] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:32:15,863 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:15] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 09:32:16,364 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:32:16,367 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:32:16,368 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:32:16,381 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:32:16,381 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:32:16,381 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:32:16,382 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:32:16,397 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:32:16,398 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:16] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:32:16,986 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 09:32:16,986 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 09:32:16,987 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': None, 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 09:32:16,987 - INFO - DEBUG: Variables de estado:
+2025-07-31 09:32:16,987 - INFO -   - bom_loaded: True
+2025-07-31 09:32:16,987 - INFO -   - stock_loaded: True
+2025-07-31 09:32:16,988 - INFO -   - cost_loaded: True
+2025-07-31 09:32:16,988 - INFO -   - sales_loaded: True
+2025-07-31 09:32:16,988 - INFO -   - suppliers_loaded: True
+2025-07-31 09:32:16,988 - INFO -   - historico_costos_loaded: True
+2025-07-31 09:32:16,993 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:16] "GET / HTTP/1.1" 200 -
+2025-07-31 09:32:17,012 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:17] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-07-31 09:32:17,015 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:17] "GET /static/js/script.js HTTP/1.1" 200 -
+2025-07-31 09:32:17,105 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:17] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:32:17,108 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:17] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 09:32:17,123 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:17] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-31 09:32:17,613 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:32:17,616 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:32:17,616 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:32:17,630 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:32:17,630 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:32:17,630 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:32:17,631 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:32:17,646 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:32:17,646 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:17] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:32:18,327 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:32:18,330 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:32:18,331 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:32:18,348 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:32:18,349 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:32:18,349 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:32:18,349 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:32:18,366 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:32:18,367 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:18] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:32:33,778 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:33] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:32:36,795 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:36] "POST /calculate_model_full_cost HTTP/1.1" 200 -
+2025-07-31 09:32:36,829 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:36] "GET /model_full_cost_result HTTP/1.1" 200 -
+2025-07-31 09:32:36,852 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:36] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-07-31 09:32:42,655 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 09:32:42,655 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 09:32:42,655 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': 'data_cache\\23579292-a519-4c4b-b9c0-6a45a1f1aa76_model_full_cost_result.pkl', 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 09:32:42,656 - INFO - DEBUG: Variables de estado:
+2025-07-31 09:32:42,656 - INFO -   - bom_loaded: True
+2025-07-31 09:32:42,656 - INFO -   - stock_loaded: True
+2025-07-31 09:32:42,656 - INFO -   - cost_loaded: True
+2025-07-31 09:32:42,657 - INFO -   - sales_loaded: True
+2025-07-31 09:32:42,657 - INFO -   - suppliers_loaded: True
+2025-07-31 09:32:42,657 - INFO -   - historico_costos_loaded: True
+2025-07-31 09:32:42,660 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:42] "GET / HTTP/1.1" 200 -
+2025-07-31 09:32:42,681 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:42] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-07-31 09:32:42,682 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:42] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-07-31 09:32:42,756 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:42] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:32:42,756 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:42] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 09:32:43,253 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:32:43,256 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:32:43,256 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:32:43,269 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:32:43,270 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:32:43,270 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:32:43,270 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:32:43,286 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:32:43,287 - INFO - 127.0.0.1 - - [31/Jul/2025 09:32:43] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:36:08,498 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 09:36:08,499 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 09:36:08,499 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': 'data_cache\\23579292-a519-4c4b-b9c0-6a45a1f1aa76_model_full_cost_result.pkl', 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 09:36:08,499 - INFO - DEBUG: Variables de estado:
+2025-07-31 09:36:08,500 - INFO -   - bom_loaded: True
+2025-07-31 09:36:08,500 - INFO -   - stock_loaded: True
+2025-07-31 09:36:08,500 - INFO -   - cost_loaded: True
+2025-07-31 09:36:08,500 - INFO -   - sales_loaded: True
+2025-07-31 09:36:08,501 - INFO -   - suppliers_loaded: True
+2025-07-31 09:36:08,503 - INFO -   - historico_costos_loaded: True
+2025-07-31 09:36:08,509 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:08] "GET / HTTP/1.1" 200 -
+2025-07-31 09:36:08,531 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:08] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-07-31 09:36:08,532 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:08] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-07-31 09:36:08,602 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:08] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:36:08,608 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:08] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 09:36:09,107 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:36:09,110 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:36:09,111 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:36:09,127 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:36:09,127 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:36:09,127 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:36:09,127 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:36:09,143 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:36:09,144 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:09] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:36:12,648 - INFO - DEBUG: Estado de archivos en sesión: ['boms', 'costs', 'historico_costos_df', 'sales_df', 'stock', 'suppliers_df']
+2025-07-31 09:36:12,648 - INFO - DEBUG: historico_costos_loaded: True
+2025-07-31 09:36:12,648 - INFO - DEBUG: Context completo: {'model_options': ['ANTID01', 'ANTID08', 'ANTID22', 'B90', 'B93', 'B96', 'BASE03', 'BASE04', 'BASE06', 'BB112', 'BB15', 'BB167', 'BB170', 'BB171', 'BB180', 'BB181', 'BB183', 'BB184', 'BB185', 'BB186', 'BB67', 'BB70', 'BB71', 'BB80', 'BB81', 'BB82', 'BB83', 'BB84', 'BB85', 'BB86', 'BB98', 'BP06', 'BP10', 'BP105', 'BP110', 'BP112', 'BP12', 'BP205', 'BP210', 'BP212', 'BP305', 'BP310', 'BP312', 'BR01', 'BR167', 'BR168', 'BR170', 'BR171', 'BR180', 'BR181', 'BR183', 'BR185', 'BR186', 'BR27', 'BR70', 'BR80', 'BR81', 'BR82', 'BR83', 'BR85', 'BR86', 'BR88', 'BR96', 'CA600F', 'CONE09', 'CONE29', 'EC1/5V', 'EC3V', 'ELECT01', 'ELECT13', 'ELECT18', 'ELECT29', 'ELECT30', 'EMBU03', 'ENF01', 'ENF02', 'ENF03', 'ENF04', 'FIL05', 'FIL10', 'FLOT04', 'FLOT05', 'FRENTE01', 'FRENTE02', 'FRENTE04', 'FRENTE05', 'FRENTE08', 'FRENTE09', 'FRENTE10', 'FRENTE22', 'FRENTE23', 'GAB01', 'GAB03', 'GAB04', 'GAB05', 'GAB08', 'GAB09', 'GAB12', 'GAB21', 'GAB22', 'GAB23', 'GAB25', 'GAB26', 'GAB27', 'GAB28', 'GAB29', 'GAB30', 'GAB31', 'GOM05', 'GOT07', 'GOT19', 'GOT20', 'GRIF08', 'GRIF11', 'KIT01', 'KIT02', 'KIT06', 'KIT07', 'KIT08', 'LAT01', 'LAT02', 'LAT03', 'LAT04', 'LAT06', 'NW02', 'NW08', 'PIL02', 'PIL04', 'PORTAV02', 'PORTAV05', 'PROD01', 'PROD02', 'PROD03', 'PROD04', 'PROD05', 'PROD06', 'PROD08', 'PROD09', 'R-FH07GR', 'R-FH18AI', 'R-FH18BL', 'R-FH18NI', 'R90', 'R93', 'R96', 'RES03', 'SERV01', 'SERV02', 'SERV03', 'SERV04', 'SERV13', 'TAPA01', 'TAPA02', 'TAPA03', 'TAPA04', 'TAPA08', 'TAPA10', 'TAPA11', 'TAPA12', 'TAPA14', 'TAPA15', 'TAPA16', 'TAPA23', 'TAPA24', 'TAPA25', 'TQ01', 'TQ02', 'TQ03', 'TQ04', 'TQ05', 'TQ06', 'TQ13'], 'sales_years': [np.int32(2024), np.int32(2023), np.int32(2022), np.int32(2021)], 'bom_loaded': True, 'stock_loaded': True, 'lot_loaded': False, 'cost_loaded': True, 'sales_loaded': True, 'suppliers_loaded': True, 'historico_costos_loaded': True, 'individual_result': None, 'lot_calculation_results': None, 'aggregate_purchase_suggestions': None, 'model_full_cost_result': 'data_cache\\23579292-a519-4c4b-b9c0-6a45a1f1aa76_model_full_cost_result.pkl', 'current_year': 2025, 'active_section': 'dashboard'}
+2025-07-31 09:36:12,649 - INFO - DEBUG: Variables de estado:
+2025-07-31 09:36:12,649 - INFO -   - bom_loaded: True
+2025-07-31 09:36:12,649 - INFO -   - stock_loaded: True
+2025-07-31 09:36:12,649 - INFO -   - cost_loaded: True
+2025-07-31 09:36:12,650 - INFO -   - sales_loaded: True
+2025-07-31 09:36:12,650 - INFO -   - suppliers_loaded: True
+2025-07-31 09:36:12,650 - INFO -   - historico_costos_loaded: True
+2025-07-31 09:36:12,654 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:12] "GET / HTTP/1.1" 200 -
+2025-07-31 09:36:12,673 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:12] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-07-31 09:36:12,674 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:12] "GET /static/js/script.js HTTP/1.1" 200 -
+2025-07-31 09:36:12,800 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:12] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-31 09:36:12,803 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:12] "GET /api/historico_costos HTTP/1.1" 200 -
+2025-07-31 09:36:12,809 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:12] "GET /api/models HTTP/1.1" 200 -
+2025-07-31 09:36:13,266 - INFO - DEBUG: Iniciando api_dashboard_data
+2025-07-31 09:36:13,270 - INFO - DEBUG: Datos de ventas cargados: (13447, 4)
+2025-07-31 09:36:13,270 - INFO - DEBUG: Columnas disponibles: ['FECHA', 'COD_PROD', 'Descripción', 'VENTA']
+2025-07-31 09:36:13,284 - INFO - DEBUG: Ventas año más reciente (2024): 19701
+2025-07-31 09:36:13,284 - INFO - DEBUG: Ventas año anterior (2023): 15372
+2025-07-31 09:36:13,284 - INFO - DEBUG: Cambio normal: 28.2%
+2025-07-31 09:36:13,285 - INFO - DEBUG: Cambio de ventas calculado: 28.2%
+2025-07-31 09:36:13,299 - INFO - DEBUG: Datos del dashboard enviados exitosamente
+2025-07-31 09:36:13,301 - INFO - 127.0.0.1 - - [31/Jul/2025 09:36:13] "GET /api/dashboard_data HTTP/1.1" 200 -
+2025-07-31 09:43:44,170 - INFO -  * Detected change in 'c:\\Users\\Analista Datos\\Desktop\\CODIGOS\\código fabricables vp2\\debug_render_issues.py', reloading
+2025-07-31 09:43:44,365 - INFO -  * Restarting with stat
+2025-07-31 09:43:46,030 - WARNING -  * Debugger is active!
+2025-07-31 09:43:46,033 - INFO -  * Debugger PIN: 117-951-363
