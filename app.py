@@ -397,95 +397,109 @@ PERMISSIONS = {
 
 # --- Creación de la base de datos y roles/usuario iniciales ---
 def create_tables_and_roles():
-    db.create_all() # Crea todas las tablas definidas por db.Model
-
-    # Definir roles con permisos específicos
-    roles_data = {
-        'super_admin': {
-            'description': 'Administrador del sistema con acceso completo',
-            'permissions': {
-                'dashboard_view': True,
-                'sales_analysis': True,
-                'data_upload': True,
-                'data_export': True,
-                'user_management': True,
-                'system_admin': True,
-                'reports_generate': True,
-                'cost_analysis': True,
-                'demand_analysis': True,
-                'supplier_management': True,
-                'admin_access': True
-            }
-        },
-        'admin': {
-            'description': 'Administrador con acceso a la mayoría de funcionalidades',
-            'permissions': {
-                'dashboard_view': True,
-                'sales_analysis': True,
-                'data_upload': True,
-                'data_export': True,
-                'user_management': True,
-                'reports_generate': True,
-                'cost_analysis': True,
-                'demand_analysis': True,
-                'supplier_management': True,
-                'admin_access': False
-            }
-        },
-        'analyst': {
-            'description': 'Analista con acceso a análisis y reportes',
-            'permissions': {
-                'dashboard_view': True,
-                'sales_analysis': True,
-                'data_upload': True,
-                'data_export': True,
-                'reports_generate': True,
-                'cost_analysis': True,
-                'demand_analysis': True,
-                'supplier_management': True,
-                'admin_access': False
-            }
-        },
-        'viewer': {
-            'description': 'Usuario con acceso de solo lectura',
-            'permissions': {
-                'dashboard_view': True,
-                'sales_analysis': True,
-                'data_export': True,
-                'admin_access': False
+    try:
+        # Crear todas las tablas definidas por db.Model
+        db.create_all()
+        logging.info("Tablas de base de datos creadas exitosamente")
+        
+        # Definir roles con permisos específicos
+        roles_data = {
+            'super_admin': {
+                'description': 'Administrador del sistema con acceso completo',
+                'permissions': {
+                    'dashboard_view': True,
+                    'sales_analysis': True,
+                    'data_upload': True,
+                    'data_export': True,
+                    'user_management': True,
+                    'system_admin': True,
+                    'reports_generate': True,
+                    'cost_analysis': True,
+                    'demand_analysis': True,
+                    'supplier_management': True,
+                    'admin_access': True
+                }
+            },
+            'admin': {
+                'description': 'Administrador con acceso a la mayoría de funcionalidades',
+                'permissions': {
+                    'dashboard_view': True,
+                    'sales_analysis': True,
+                    'data_upload': True,
+                    'data_export': True,
+                    'user_management': True,
+                    'reports_generate': True,
+                    'cost_analysis': True,
+                    'demand_analysis': True,
+                    'supplier_management': True,
+                    'admin_access': False
+                }
+            },
+            'analyst': {
+                'description': 'Analista con acceso a análisis y reportes',
+                'permissions': {
+                    'dashboard_view': True,
+                    'sales_analysis': True,
+                    'data_upload': True,
+                    'data_export': True,
+                    'reports_generate': True,
+                    'cost_analysis': True,
+                    'demand_analysis': True,
+                    'supplier_management': True,
+                    'admin_access': False
+                }
+            },
+            'viewer': {
+                'description': 'Usuario con acceso de solo lectura',
+                'permissions': {
+                    'dashboard_view': True,
+                    'sales_analysis': True,
+                    'data_export': True,
+                    'admin_access': False
+                }
             }
         }
-    }
 
-    # Crear roles si no existen
-    for role_name, role_data in roles_data.items():
-        if not Role.query.filter_by(name=role_name).first():
-            role = Role(
-                name=role_name,
-                description=role_data['description'],
-                permissions=json.dumps(role_data['permissions'])
-            )
-            db.session.add(role)
-    
-    db.session.commit()
+        # Crear roles si no existen
+        for role_name, role_data in roles_data.items():
+            if not Role.query.filter_by(name=role_name).first():
+                role = Role(
+                    name=role_name,
+                    description=role_data['description'],
+                    permissions=json.dumps(role_data['permissions'])
+                )
+                db.session.add(role)
+                logging.info(f"Rol '{role_name}' creado exitosamente")
+        
+        db.session.commit()
+        logging.info("Roles creados exitosamente")
 
-    # Crear usuario super administrador por defecto si no existe
-    if not User.query.filter_by(username='admin').first():
-        super_admin_role = Role.query.filter_by(name='super_admin').first()
-        if super_admin_role:
-            admin_user = User(
-                username='admin',
-                email='admin@sistema.com',
-                first_name='Administrador',
-                last_name='Sistema',
-                role_id=super_admin_role.id,
-                is_active=True
-            )
-            admin_user.set_password('admin123')  # Contraseña por defecto
-            db.session.add(admin_user)
-            db.session.commit()
-            logging.info("Usuario administrador creado: admin/admin123")
-            print("¡POR FAVOR, CAMBIA ESTA CONTRASEÑA INMEDIATAMENTE DESPUÉS DE INICIAR SESIÓN POR PRIMERA VEZ!")
+        # Crear usuario super administrador por defecto si no existe
+        if not User.query.filter_by(username='admin').first():
+            super_admin_role = Role.query.filter_by(name='super_admin').first()
+            if super_admin_role:
+                admin_user = User(
+                    username='admin',
+                    email='admin@sistema.com',
+                    first_name='Administrador',
+                    last_name='Sistema',
+                    role_id=super_admin_role.id,
+                    is_active=True
+                )
+                admin_user.set_password('admin123')  # Contraseña por defecto
+                db.session.add(admin_user)
+                db.session.commit()
+                logging.info("Usuario administrador creado: admin/admin123")
+                print("¡POR FAVOR, CAMBIA ESTA CONTRASEÑA INMEDIATAMENTE DESPUÉS DE INICIAR SESIÓN POR PRIMERA VEZ!")
+            else:
+                logging.error("No se pudo encontrar el rol 'super_admin' para crear el usuario administrador")
+        else:
+            logging.info("Usuario administrador ya existe")
+            
+    except Exception as e:
+        logging.error(f"Error en create_tables_and_roles: {e}")
+        db.session.rollback()
+        raise
 
 # --- FUNCIONES AUXILIARES (EXISTENTES) ---
 def get_core_instance():
@@ -2420,7 +2434,13 @@ def api_delete_user(user_id):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-if __name__ == '__main__':
-    with app.app_context():
+# Crear tablas y roles automáticamente al importar la aplicación
+with app.app_context():
+    try:
         create_tables_and_roles()
+        logging.info("Base de datos inicializada correctamente")
+    except Exception as e:
+        logging.error(f"Error inicializando base de datos: {e}")
+
+if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
