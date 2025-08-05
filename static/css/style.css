@@ -1,12 +1,12 @@
 /*
  * Sistema de Gestión de Fabricabilidad - CSS Profesional
- * Versión: 3.9
- * Última actualización: 2025-07-31 18:00:00
+ * Versión: 4.0
+ * Última actualización: 2025-07-31 18:30:00
  * 
  * Este archivo contiene todos los estilos profesionales para la aplicación
  * Incluye: Variables CSS, Componentes, Efectos modernos, Responsive Design y Modo Oscuro/Claro
  * 
- * FIXED: Mejoras visuales completas - Fondos, contrastes y tipografía optimizada
+ * FIXED: Correcciones específicas de visibilidad para títulos problemáticos
  */
 
 /* Importar fuentes profesionales */
@@ -2626,6 +2626,79 @@ main {
     border-top: 1px solid var(--border-color);
     padding: var(--spacing-md) var(--spacing-lg);
     color: var(--text-muted);
+}
+
+/* ========================================
+   CORRECCIONES ESPECÍFICAS DE VISIBILIDAD
+   ======================================== */
+
+/* Corrección forzada para títulos específicos */
+.header-bar h1,
+.header-bar .h5,
+.header-bar .animated-text {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.sidebar .text-uppercase,
+.sidebar h6,
+.sidebar .nav-link span,
+.sidebar-footer small {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Corrección específica para títulos de secciones */
+.card-header .animated-text,
+.card-header span {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+/* Corrección para modo oscuro */
+[data-theme="dark"] .header-bar h1,
+[data-theme="dark"] .header-bar .h5,
+[data-theme="dark"] .header-bar .animated-text {
+    color: #60a5fa !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .sidebar .text-uppercase,
+[data-theme="dark"] .sidebar h6,
+[data-theme="dark"] .sidebar .nav-link span,
+[data-theme="dark"] .sidebar-footer small {
+    color: #60a5fa !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Corrección específica para modo oscuro en títulos de secciones */
+[data-theme="dark"] .card-header .animated-text,
+[data-theme="dark"] .card-header span {
+    color: #f8fafc !important;
+    font-weight: 600 !important;
+}
+
+/* Corrección para elementos específicos que siguen invisibles */
+.header-bar h1.animated-text,
+.sidebar .text-uppercase.animated-text,
+.sidebar h6.animated-text,
+.sidebar-footer small.animated-text {
+    color: #3b82f6 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .header-bar h1.animated-text,
+[data-theme="dark"] .sidebar .text-uppercase.animated-text,
+[data-theme="dark"] .sidebar h6.animated-text,
+[data-theme="dark"] .sidebar-footer small.animated-text {
+    color: #60a5fa !important;
+    font-weight: 700 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
 }
 
 
