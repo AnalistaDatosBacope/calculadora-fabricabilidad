@@ -17,16 +17,48 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4.1&t=1722456300">
     
     <!-- Estilos específicos para modo oscuro -->
     <style>
+        /* FORZADO MÁXIMO - Estilos inline para garantizar visibilidad */
+        .header-bar h1.animated-text,
+        .header-bar .h5.animated-text {
+            color: #3b82f6 !important;
+            font-weight: 700 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .sidebar .text-uppercase.animated-text,
+        .sidebar h6.animated-text,
+        .sidebar-footer small.animated-text {
+            color: #3b82f6 !important;
+            font-weight: 700 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .card-header .animated-text,
+        .card-header span {
+            color: #3b82f6 !important;
+            font-weight: 700 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* MODO OSCURO - FORZADO MÁXIMO */
         [data-theme="dark"] .header-bar h1,
         [data-theme="dark"] .header-bar .h5,
         [data-theme="dark"] .header-bar .animated-text {
             color: #60a5fa !important;
             font-weight: 700 !important;
             text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         [data-theme="dark"] .sidebar .text-uppercase,
@@ -35,6 +67,8 @@
             color: #60a5fa !important;
             font-weight: 700 !important;
             text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         [data-theme="dark"] .card-header .animated-text,
@@ -42,6 +76,25 @@
             color: #f8fafc !important;
             font-weight: 700 !important;
             text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* GARANTÍA ABSOLUTA - Override de cualquier otro estilo */
+        *[class*="animated-text"] {
+            color: #3b82f6 !important;
+            font-weight: 700 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        [data-theme="dark"] *[class*="animated-text"] {
+            color: #60a5fa !important;
+            font-weight: 700 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
     </style>
     
