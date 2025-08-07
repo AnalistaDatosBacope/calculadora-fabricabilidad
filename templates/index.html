@@ -693,12 +693,13 @@ function mostrarAlertaDemanda(msg, tipo='danger') {
         <form id="equalization_form" action="{{ url_for('calculate_stock_equalization') }}" method="post">
             <div class="form-group mb-3">
                 <label for="models_select_equalization">Seleccionar Modelos:</label>
-                <select class="form-control" id="models_select_equalization" name="selected_models_equalization" multiple>
-                                    {% for model in model_options %}
-                                        <option value="{{ model }}">{{ model }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                <select class="form-control" id="models_select_equalization" name="selected_models_equalization" multiple required>
+                    <option value="">Seleccionar modelos...</option>
+                    {% for model in model_options %}
+                        <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="form-group mb-3">
                 <label for="start_date_equalization">Fecha de Inicio Proyección:</label>
                 <input type="text" class="form-control flatpickr-input" id="start_date_equalization" name="start_date_equalization" required>

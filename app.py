@@ -23,16 +23,16 @@ app = Flask(__name__)
 # ¡Cámbiala por una cadena aleatoria y compleja!
 app.secret_key = 'Laprida2375' # Usando la clave que me proporcionaste
 
-# Configuración específica para Render.com
+# Configuración específica para desarrollo local
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
-app.config['SESSION_COOKIE_SECURE'] = True  # Para HTTPS
+app.config['SESSION_COOKIE_SECURE'] = False  # Permitir cookies en HTTP para desarrollo
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-# Configuración específica para Render.com - Usar cookies en lugar de sesiones de archivos
-app.config['SESSION_TYPE'] = None  # Deshabilitar sesiones de archivos
-app.config['SESSION_USE_SIGNER'] = True  # Usar firmas para cookies
-app.config['SESSION_KEY_PREFIX'] = 'calculadora_'  # Prefijo para cookies
+# Configuración de sesiones para desarrollo local
+app.config['SESSION_TYPE'] = 'filesystem'  # Usar sesiones de archivos para desarrollo
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_KEY_PREFIX'] = 'calculadora_'
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
@@ -53,7 +53,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Deshabilita el seguimiento de modificaciones para reducir la sobrecarga
 
 db = SQLAlchemy(app) # Inicializa la instancia de SQLAlchemy
-login_manager = LoginManager(app) # Inicializa el gestor de login
+login_manager = LoginManager(app)
+login_manager.session_protection = 'strong' # Inicializa el gestor de login
 login_manager.login_view = 'login' # La vista a la que se redirige si se intenta acceder a una ruta protegida sin autenticar
 
 # Asegurarse de que las carpetas existan
@@ -156,7 +157,11 @@ class UserFileStatus(db.Model):
 # Esta función es requerida por Flask-Login para recargar el usuario desde la sesión
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    """Cargar usuario para Flask-Login"""
+    try:
+        return User.query.get(int(user_id))
+    except (ValueError, TypeError):
+        return None
 
 # --- FILTROS PERSONALIZADOS PARA JINJA2 ---
 @app.template_filter('from_json')
@@ -590,7 +595,20 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        
+        # Debug logs
+        logging.info(f"DEBUG LOGIN: Username recibido: {username}")
+        logging.info(f"DEBUG LOGIN: Password recibido: {'***' if password else 'None'}")
+        
         user = User.query.filter_by(username=username).first()
+        
+        # Debug logs
+        if user:
+            logging.info(f"DEBUG LOGIN: Usuario encontrado: {user.username}")
+            logging.info(f"DEBUG LOGIN: Usuario activo: {user.is_active}")
+            logging.info(f"DEBUG LOGIN: Password válido: {user.check_password(password)}")
+        else:
+            logging.info(f"DEBUG LOGIN: Usuario NO encontrado para username: {username}")
         
         if user and user.check_password(password) and user.is_active:
             login_user(user) # Inicia sesión el usuario
@@ -607,10 +625,13 @@ def login():
             
             flash(f'¡Bienvenido, {user.get_full_name()}!', 'success')
             next_page = request.args.get('next') # Redirige a la página que intentaba acceder antes del login
+            logging.info(f"DEBUG LOGIN: Login exitoso, redirigiendo a: {next_page or url_for('index')}")
             return redirect(next_page or url_for('index'))
         elif user and not user.is_active:
+            logging.info(f"DEBUG LOGIN: Usuario inactivo: {username}")
             flash('Tu cuenta está desactivada. Contacta al administrador.', 'error')
         else:
+            logging.info(f"DEBUG LOGIN: Credenciales inválidas para: {username}")
             flash('Nombre de usuario o contraseña incorrectos.', 'danger')
     return render_template('login.html', title='Iniciar Sesión')
 
@@ -1265,12 +1286,9 @@ def demand_result_page():
 @app.route('/calculate_stock_equalization', methods=['POST'])
 @login_required
 def calculate_stock_equalization():
-    # Protección extra: si la petición no es POST o faltan datos, redirigir
+    # Protección extra: si la petición no es POST, redirigir
     if request.method != 'POST':
         flash('Acceso inválido al cálculo de equilibrado. Usa la interfaz de la aplicación.', 'warning')
-        return redirect(url_for('index'))
-    if not request.form or 'selected_models_equalization' not in request.form:
-        flash('Faltan datos para calcular el equilibrado. Usa la interfaz de la aplicación.', 'warning')
         return redirect(url_for('index'))
 
     calculadora_core = get_core_instance()
@@ -1278,84 +1296,65 @@ def calculate_stock_equalization():
         flash('No hay datos cargados o la sesión expiró. Por favor, recarga los archivos.', 'warning')
         return redirect(url_for('index'))
 
-    selected_models_json = request.form.get('selected_models_equalization')
-    print(f"DEBUG (Backend - Equilibrado): selected_models_json RAW received: '{selected_models_json}' (Type: {type(selected_models_json)})")
-    print(f"DEBUG (Backend - Equilibrado): All form data: {dict(request.form)}")
-    print(f"DEBUG (Backend - Equilibrado): Content-Type: {request.content_type}")
-    print(f"DEBUG (Backend - Equilibrado): Request headers: {dict(request.headers)}")
-
-    selected_models = []
-    if selected_models_json is None:
-        print("DEBUG (Backend - Equilibrado): selected_models_json is None")
-        selected_models = []
-    elif not selected_models_json.strip():
-        print("DEBUG (Backend - Equilibrado): selected_models_json is empty/whitespace")
-        selected_models = []
+    # Manejar tanto JSON como form data
+    if request.is_json:
+        data = request.get_json()
+        selected_models = data.get('selected_models_equalization', [])
+        start_date_str = data.get('start_date_equalization')
+        end_date_str = data.get('end_date_equalization')
     else:
-        try:
-            # Limpiar el string de posibles caracteres extra
-            cleaned_json = selected_models_json.strip()
-            print(f"DEBUG (Backend - Equilibrado): Cleaned JSON string: '{cleaned_json}'")
-            print(f"DEBUG (Backend - Equilibrado): JSON string length: {len(cleaned_json)}")
-            
-            if isinstance(selected_models_json, list):
-                selected_models = selected_models_json
-                print("DEBUG (Backend - Equilibrado): selected_models_json is already a list")
-            else:
-                decoded = json.loads(cleaned_json)
-                if isinstance(decoded, list):
-                    selected_models = decoded
-                elif isinstance(decoded, str):
-                    selected_models = [decoded]
+        # Formulario tradicional
+        selected_models_json = request.form.get('selected_models_equalization')
+        if selected_models_json:
+            try:
+                if isinstance(selected_models_json, list):
+                    selected_models = selected_models_json
                 else:
-                    selected_models = []
-            print(f"DEBUG (Backend - Equilibrado): selected_models after decode: {selected_models} (Type: {type(selected_models)})")
-        except json.JSONDecodeError as e:
-            print(f"DEBUG (Backend - Equilibrado): JSONDecodeError al decodificar modelos: {e} - Input was: '{selected_models_json}'")
-            print(f"DEBUG (Backend - Equilibrado): Error position: line {e.lineno}, column {e.colno}")
-            flash('Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido.', 'danger')
-            return jsonify({'success': False, 'error': f'Error al decodificar los modelos seleccionados para el equilibrado. Formato JSON inválido: {str(e)}'})
-        except Exception as e:
-            print(f"DEBUG (Backend - Equilibrado): Error inesperado al decodificar modelos: {e} - Input was: '{selected_models_json}'")
-            flash('Error inesperado al procesar los modelos seleccionados para el equilibrado.', 'danger')
-            return jsonify({'success': False, 'error': f'Error inesperado al procesar los modelos seleccionados: {str(e)}'})
-    
-    start_date_str = request.form.get('start_date_equalization')
-    end_date_str = request.form.get('end_date_equalization')
+                    selected_models = json.loads(selected_models_json)
+            except json.JSONDecodeError:
+                selected_models = []
+        else:
+            selected_models = []
+        
+        start_date_str = request.form.get('start_date_equalization')
+        end_date_str = request.form.get('end_date_equalization')
+
+    print(f"DEBUG (Backend - Equilibrado): selected_models: {selected_models}")
+    print(f"DEBUG (Backend - Equilibrado): start_date_str: {start_date_str}")
+    print(f"DEBUG (Backend - Equilibrado): end_date_str: {end_date_str}")
 
     if not selected_models:
-        flash('No seleccionaste ningún modelo para calcular el equilibrado de stock.', 'warning')
         return jsonify({'success': False, 'error': 'No seleccionaste ningún modelo para calcular el equilibrado de stock.'})
     
     if not start_date_str or not end_date_str:
-        flash('Debes seleccionar una fecha de inicio y una fecha de fin para el equilibrado.', 'warning')
         return jsonify({'success': False, 'error': 'Debes seleccionar una fecha de inicio y una fecha de fin para el equilibrado.'})
 
     try:
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
         if start_date >= end_date:
-            flash('La fecha de inicio debe ser anterior a la fecha de fin para el equilibrado.', 'warning')
             return jsonify({'success': False, 'error': 'La fecha de inicio debe ser anterior a la fecha de fin para el equilibrado.'})
     except ValueError:
-        flash('Formato de fecha inválido para el equilibrado. Por favor, usa el formato `%Y-%m-%d`.', 'danger')
-        return jsonify({'success': False, 'error': 'Formato de fecha inválido para el equilibrado. Por favor, usa el formato `%Y-%m-%d`.'})
+        return jsonify({'success': False, 'error': 'Formato de fecha inválido para el equilibrado. Por favor, usa el formato YYYY-MM-DD.'})
 
-    results = calculadora_core.calculate_stock_equalization(selected_models, start_date, end_date)
+    try:
+        results = calculadora_core.calculate_stock_equalization(selected_models, start_date, end_date)
 
-    session_id = session.get('session_id', str(uuid.uuid4()))
-    results_filename = f"{session_id}_equalization_results.pkl"
-    results_path = os.path.join(app.config['DATA_CACHE_FOLDER'], results_filename)
+        session_id = session.get('session_id', str(uuid.uuid4()))
+        results_filename = f"{session_id}_equalization_results.pkl"
+        results_path = os.path.join(app.config['DATA_CACHE_FOLDER'], results_filename)
 
-    with open(results_path, 'wb') as f:
-        pickle.dump(results.to_dict(), f)
-    print(f"DEBUG: Archivo de resultados de equilibrado guardado en: {results_path}")
-    print(f"DEBUG: Tamaño del archivo guardado: {os.path.getsize(results_path)} bytes")
+        with open(results_path, 'wb') as f:
+            pickle.dump(results.to_dict(), f)
+        print(f"DEBUG: Archivo de resultados de equilibrado guardado en: {results_path}")
 
-    session['equalization_results_path'] = results_path
-    session.modified = True
-    flash('Cálculo de equilibrado de stock completado.', 'success')
-    return jsonify({'success': True, 'redirect_url': url_for('equalization_result_page')})
+        session['equalization_results_path'] = results_path
+        session.modified = True
+        
+        return jsonify({'success': True, 'redirect_url': url_for('equalization_result_page')})
+    except Exception as e:
+        print(f"DEBUG: Error en calculate_stock_equalization: {e}")
+        return jsonify({'success': False, 'error': f'Error al calcular el equilibrado: {str(e)}'})
 
 
 # --- NUEVA RUTA PARA MOSTRAR RESULTADOS DE EQUILIBRADO DE STOCK ---
@@ -1492,38 +1491,45 @@ def api_filter_suppliers():
 def calculate_model_full_cost():
     calculadora_core = get_core_instance()
     if not calculadora_core:
-        flash('No hay datos cargados o la sesión expiró. Por favor, recarga los archivos.', 'warning')
-        return redirect(url_for('index'))
+        return jsonify({'success': False, 'error': 'No hay datos cargados o la sesión expiró. Por favor, recarga los archivos.'})
 
-    model_name = request.form.get('model_name_full_cost')
-    quantity_str = request.form.get('quantity_full_cost')
+    # Manejar tanto JSON como form data
+    if request.is_json:
+        data = request.get_json()
+        model_name = data.get('model_name_full_cost')
+        quantity_str = data.get('quantity_full_cost')
+    else:
+        # Formulario tradicional
+        model_name = request.form.get('model_name_full_cost')
+        quantity_str = request.form.get('quantity_full_cost')
 
     if not model_name or not quantity_str:
-        flash('Debes seleccionar un modelo y una cantidad para el cálculo de costo total.', 'warning')
-        return redirect(url_for('index'))
+        return jsonify({'success': False, 'error': 'Debes seleccionar un modelo y una cantidad para el cálculo de costo total.'})
 
     try:
         quantity = int(quantity_str)
         if quantity <= 0:
-            flash('La cantidad debe ser un número positivo.', 'warning')
-            return redirect(url_for('index'))
+            return jsonify({'success': False, 'error': 'La cantidad debe ser un número positivo.'})
     except ValueError:
-        flash('La cantidad debe ser un número entero válido.', 'danger')
-        return redirect(url_for('index'))
+        return jsonify({'success': False, 'error': 'La cantidad debe ser un número entero válido.'})
 
-    result = calculadora_core.calculate_model_full_cost(model_name, quantity)
+    try:
+        result = calculadora_core.calculate_model_full_cost(model_name, quantity)
 
-    session_id = session.get('session_id', str(uuid.uuid4()))
-    result_filename = f"{session_id}_model_full_cost_result.pkl"
-    result_path = os.path.join(app.config['DATA_CACHE_FOLDER'], result_filename)
+        session_id = session.get('session_id', str(uuid.uuid4()))
+        result_filename = f"{session_id}_model_full_cost_result.pkl"
+        result_path = os.path.join(app.config['DATA_CACHE_FOLDER'], result_filename)
 
-    with open(result_path, 'wb') as f:
-        pickle.dump(result.to_dict(), f)
+        with open(result_path, 'wb') as f:
+            pickle.dump(result.to_dict(), f)
 
-    session['model_full_cost_result_path'] = result_path
-    session.modified = True
-    flash(f'Costo total de fabricación para {model_name} (x{quantity}) calculado exitosamente.', 'success')
-    return jsonify({'success': True, 'redirect_url': url_for('model_full_cost_result_page')})
+        session['model_full_cost_result_path'] = result_path
+        session.modified = True
+        
+        return jsonify({'success': True, 'redirect_url': url_for('model_full_cost_result_page')})
+    except Exception as e:
+        print(f"DEBUG: Error en calculate_model_full_cost: {e}")
+        return jsonify({'success': False, 'error': f'Error al calcular el costo total: {str(e)}'})
 
 
 # --- NUEVA RUTA PARA MOSTRAR LOS RESULTADOS DEL COSTO TOTAL DE UN MODELO ---
@@ -1667,24 +1673,53 @@ def generate_report():
 @login_required
 def api_historico_costos():
     """
-    Si se llama sin parámetros, devuelve la lista de artículos.
+    Si se llama sin parámetros, devuelve la lista de artículos con información de costos.
     Si se pasa ?articulo=XXX, devuelve los años y costos de ese artículo.
     """
     calculadora_data_raw = session.get('calculadora_core', {})
     path = calculadora_data_raw.get('historico_costos_df')
     if not path or not os.path.exists(path):
         return jsonify({'success': False, 'error': 'No hay archivo de histórico de costos cargado.'}), 404
+    
     df = pd.read_feather(path)
     articulo = request.args.get('articulo')
+    
     if not articulo:
-        # Devolver lista de artículos
-        articulos = df.iloc[:,0].dropna().unique().tolist()
+        # Devolver lista de artículos con información de costos
+        articulos = []
+        for idx, row in df.iterrows():
+            codigo = row.iloc[0]  # Primera columna es el código
+            if pd.notna(codigo):
+                # Buscar costos en las columnas numéricas
+                costos = []
+                for col in df.columns[1:]:  # Excluir la primera columna (código)
+                    if pd.api.types.is_numeric_dtype(df[col]) and pd.notna(row[col]):
+                        costos.append(float(row[col]))
+                
+                if costos:
+                    costo_actual = costos[-1] if costos else None
+                    costo_anterior = costos[-2] if len(costos) > 1 else None
+                    
+                    # Calcular variación
+                    variacion = None
+                    if costo_actual and costo_anterior and costo_anterior != 0:
+                        variacion = ((costo_actual - costo_anterior) / costo_anterior) * 100
+                    
+                    articulos.append({
+                        'codigo': str(codigo),
+                        'nombre': f'Artículo {codigo}',  # Nombre genérico
+                        'costo_actual': costo_actual,
+                        'costo_anterior': costo_anterior,
+                        'variacion': variacion
+                    })
+        
         return jsonify({'success': True, 'articulos': articulos})
     else:
         # Devolver historial de costos del artículo
         row = df[df.iloc[:,0] == articulo]
         if row.empty:
             return jsonify({'success': False, 'error': 'Artículo no encontrado.'}), 404
+        
         # Extraer años y costos
         data = row.iloc[0,1:].to_dict()
         # Filtrar solo años válidos y costos no nulos
@@ -1702,10 +1737,34 @@ def api_sales_analysis():
         period = request.args.get('period', 'year')
         models = request.args.get('models', '').split(',') if request.args.get('models') else []
         
+        # Limpiar la lista de modelos (remover valores vacíos)
+        models = [model.strip() for model in models if model.strip()]
+        
         print(f"DEBUG: api_sales_analysis - Parámetros recibidos:")
         print(f"  year: {year}")
         print(f"  period: {period}")
         print(f"  models: {models}")
+        
+        # Si no se especifican parámetros, devolver lista de modelos
+        if not year and not models:
+            # Obtener datos de ventas para extraer modelos
+            calculadora_data_raw = session.get('calculadora_core', {})
+            sales_path = calculadora_data_raw.get('sales_df')
+            
+            if not sales_path or not os.path.exists(sales_path):
+                print("DEBUG: No hay datos de ventas cargados")
+                return jsonify({'success': False, 'error': 'No hay datos de ventas cargados'})
+            
+            sales_df = pd.read_feather(sales_path)
+            
+            # Extraer modelos únicos de la columna COD_PROD
+            if 'COD_PROD' in sales_df.columns:
+                modelos = sales_df['COD_PROD'].unique().tolist()
+                print(f"DEBUG: Modelos encontrados: {len(modelos)}")
+                return jsonify({'success': True, 'modelos': modelos})
+            else:
+                print(f"DEBUG: Columna COD_PROD no encontrada. Columnas disponibles: {list(sales_df.columns)}")
+                return jsonify({'success': False, 'error': 'Columna COD_PROD no encontrada en datos de ventas'})
         
         # Obtener datos de ventas
         calculadora_data_raw = session.get('calculadora_core', {})
@@ -1763,122 +1822,76 @@ def api_sales_analysis():
             print(f"DEBUG: Después de filtrar por año {year}: {sales_df.shape[0]} registros")
         
         # Filtrar por modelos si se especifican
-        if models and models[0]:  # Verificar que no esté vacío
+        if models:  # Verificar que la lista no esté vacía
             print(f"DEBUG: Filtrando por modelos: {models}")
-            print(f"DEBUG: Modelos únicos en datos: {sales_df['COD_PROD'].unique()}")  # Cambiar a COD_PROD
             sales_df = sales_df[sales_df['COD_PROD'].isin(models)]  # Cambiar a COD_PROD
-            print(f"DEBUG: Después de filtrar por modelos {models}: {sales_df.shape[0]} registros")
+            print(f"DEBUG: Después de filtrar por modelos: {sales_df.shape[0]} registros")
         
-        if sales_df.empty:
-            print("DEBUG: DataFrame vacío después de filtros")
-            return jsonify({
-                'success': True,
-                'chart_data': {'labels': [], 'datasets': []},
-                'summary': {'total_sales': 0, 'avg_sales': 0, 'top_model': '', 'top_sales': 0},
-                'distribution': {'labels': [], 'data': []},
-                'details': []
-            })
-        
-        print(f"DEBUG: Datos finales: {sales_df.shape[0]} registros")
-        print(f"DEBUG: Modelos únicos: {sales_df['COD_PROD'].unique()}")  # Cambiar a COD_PROD
-        
-        # Preparar datos según el período
-        if period == 'year':
-            sales_df['period'] = sales_df['FECHA'].dt.year  # Cambiar a FECHA
-            period_labels = sales_df['period'].unique()
-        elif period == 'semester':
-            sales_df['period'] = sales_df['FECHA'].dt.year.astype(str) + '-' + ((sales_df['FECHA'].dt.month > 6) + 1).astype(str)  # Cambiar a FECHA
-            period_labels = sorted(sales_df['period'].unique())
+        # Agrupar por período según el parámetro period
+        if period == 'month':
+            # Agrupar por mes
+            sales_df['period'] = sales_df['FECHA'].dt.to_period('M')
+            grouped = sales_df.groupby('period')['VENTA'].sum().reset_index()
+            grouped['period'] = grouped['period'].astype(str)
+            # Ordenar por período
+            grouped = grouped.sort_values('period')
         elif period == 'quarter':
-            sales_df['period'] = sales_df['FECHA'].dt.year.astype(str) + '-Q' + sales_df['FECHA'].dt.quarter.astype(str)  # Cambiar a FECHA
-            period_labels = sorted(sales_df['period'].unique())
-        else:  # month
-            sales_df['period'] = sales_df['FECHA'].dt.strftime('%Y-%m')  # Cambiar a FECHA
-            period_labels = sorted(sales_df['period'].unique())
+            # Agrupar por trimestre
+            sales_df['period'] = sales_df['FECHA'].dt.to_period('Q')
+            grouped = sales_df.groupby('period')['VENTA'].sum().reset_index()
+            grouped['period'] = grouped['period'].astype(str)
+            # Ordenar por período
+            grouped = grouped.sort_values('period')
+        else:  # year por defecto
+            # Agrupar por año
+            sales_df['period'] = sales_df['FECHA'].dt.year
+            grouped = sales_df.groupby('period')['VENTA'].sum().reset_index()
+            grouped['period'] = grouped['period'].astype(str)
+            # Ordenar por período
+            grouped = grouped.sort_values('period')
         
-        print(f"DEBUG: Períodos únicos: {period_labels}")
-        
-        # Agrupar datos
-        grouped_sales = sales_df.groupby(['period', 'COD_PROD'])['VENTA'].sum().reset_index()  # Cambiar a COD_PROD y VENTA
-        print(f"DEBUG: Datos agrupados: {grouped_sales.shape[0]} registros")
-        
-        # Preparar datos para el gráfico principal
-        chart_data = {
-            'labels': [str(label) for label in period_labels],  # Convertir a strings
-            'datasets': []
+        # Convertir a formato de respuesta
+        result = {
+            'periods': grouped['period'].tolist(),
+            'sales': grouped['VENTA'].tolist(),
+            'summary': {
+                'total_sales': int(grouped['VENTA'].sum()),
+                'avg_monthly': float(grouped['VENTA'].mean()),
+                'top_model': sales_df.groupby('COD_PROD')['VENTA'].sum().idxmax() if not sales_df.empty else 'N/A',
+                'yearly_change': 0  # Calcular si hay datos históricos
+            },
+            'details': []
         }
         
-        # Crear dataset para cada modelo
-        for modelo in grouped_sales['COD_PROD'].unique():  # Cambiar a COD_PROD
-            model_data = []
-            for period in period_labels:
-                sales = float(grouped_sales[(grouped_sales['period'] == period) & (grouped_sales['COD_PROD'] == modelo)]['VENTA'].sum())  # Convertir a float
-                model_data.append(sales)
+        # Generar datos detallados por período y modelo
+        if not sales_df.empty:
+            # Agrupar por período y modelo
+            detailed_grouped = sales_df.groupby(['period', 'COD_PROD'])['VENTA'].sum().reset_index()
+            total_sales = detailed_grouped['VENTA'].sum()
             
-            chart_data['datasets'].append({
-                'label': str(modelo),  # Convertir a string
-                'data': model_data,
-                'borderColor': f'#{hash(str(modelo)) % 0xFFFFFF:06x}',
-                'backgroundColor': f'rgba({hash(str(modelo)) % 255}, {hash(str(modelo)) % 100 + 100}, {hash(str(modelo)) % 100 + 150}, 0.2)',
-                'fill': False
-            })
-        
-        print(f"DEBUG: Datasets creados: {len(chart_data['datasets'])}")
-        
-        # Calcular resumen estadístico
-        total_sales = float(sales_df['VENTA'].sum())  # Convertir a float
-        avg_sales = float(sales_df['VENTA'].mean())  # Convertir a float
-        top_model_sales = sales_df.groupby('COD_PROD')['VENTA'].sum().sort_values(ascending=False)  # Cambiar a COD_PROD y VENTA
-        top_model = str(top_model_sales.index[0]) if not top_model_sales.empty else ''  # Convertir a string
-        top_sales = float(top_model_sales.iloc[0]) if not top_model_sales.empty else 0.0  # Convertir a float
-        
-        summary = {
-            'total_sales': int(total_sales),
-            'avg_sales': round(avg_sales, 2),
-            'top_model': top_model,
-            'top_sales': int(top_sales)
-        }
-        
-        print(f"DEBUG: Resumen calculado: {summary}")
-        
-        # Preparar datos para el gráfico de distribución
-        model_distribution = sales_df.groupby('COD_PROD')['VENTA'].sum().sort_values(ascending=False) # Cambiar a COD_PROD y VENTA
-        distribution = {
-            'labels': [str(label) for label in model_distribution.index.tolist()],  # Convertir a strings
-            'data': [float(value) for value in model_distribution.values.tolist()]  # Convertir a floats
-        }
-        
-        print(f"DEBUG: Distribución calculada: {len(distribution['labels'])} modelos")
-        
-        # Preparar datos detallados para la tabla
-        details = []
-        for period in period_labels:
-            period_sales = grouped_sales[grouped_sales['period'] == period]
-            for _, row in period_sales.iterrows():
-                percentage = (float(row['VENTA']) / total_sales * 100) if total_sales > 0 else 0.0  # Convertir a float
-                details.append({
-                    'period': str(period),  # Convertir a string
-                    'model': str(row['COD_PROD']),  # Convertir a string
-                    'quantity': int(float(row['VENTA'])),  # Convertir a int
+            for _, row in detailed_grouped.iterrows():
+                percentage = (row['VENTA'] / total_sales * 100) if total_sales > 0 else 0
+                result['details'].append({
+                    'period': str(row['period']),
+                    'model': str(row['COD_PROD']),
+                    'quantity': int(row['VENTA']),
                     'percentage': round(percentage, 2)
                 })
         
-        print(f"DEBUG: Detalles calculados: {len(details)} registros")
+        # Generar distribución por modelo para el gráfico
+        if not sales_df.empty:
+            model_distribution = sales_df.groupby('COD_PROD')['VENTA'].sum()
+            result['model_distribution'] = {
+                'labels': model_distribution.index.tolist(),
+                'data': model_distribution.values.tolist()
+            }
         
-        result = {
-            'success': True,
-            'chart_data': chart_data,
-            'summary': summary,
-            'distribution': distribution,
-            'details': details
-        }
-        
-        print("DEBUG: Respuesta enviada exitosamente")
-        return jsonify(result)
+        print(f"DEBUG: Resultado final: {result}")
+        return jsonify({'success': True, **result})
         
     except Exception as e:
-        print(f"DEBUG: Error en api_sales_analysis: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)})
+        print(f"DEBUG: Error en api_sales_analysis: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/dashboard_data', methods=['GET'])
 @permission_required('dashboard_view')

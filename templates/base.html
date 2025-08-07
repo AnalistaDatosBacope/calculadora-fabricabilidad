@@ -17,138 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4.1&t=1722456300">
-    
-    <!-- Estilos específicos para modo oscuro -->
-    <style>
-        /* FORZADO MÁXIMO - Estilos inline para garantizar visibilidad */
-        .header-bar h1.animated-text,
-        .header-bar .h5.animated-text {
-            color: #3b82f6 !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        .sidebar .text-uppercase.animated-text,
-        .sidebar h6.animated-text,
-        .sidebar-footer small.animated-text {
-            color: #3b82f6 !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        .card-header .animated-text,
-        .card-header span {
-            color: #3b82f6 !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        /* MODO OSCURO - FORZADO MÁXIMO */
-        [data-theme="dark"] .header-bar h1,
-        [data-theme="dark"] .header-bar .h5,
-        [data-theme="dark"] .header-bar .animated-text {
-            color: #60a5fa !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        [data-theme="dark"] .sidebar .text-uppercase,
-        [data-theme="dark"] .sidebar h6,
-        [data-theme="dark"] .sidebar-footer small {
-            color: #60a5fa !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        [data-theme="dark"] .card-header .animated-text,
-        [data-theme="dark"] .card-header span {
-            color: #f8fafc !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        /* GARANTÍA ABSOLUTA - Override de cualquier otro estilo */
-        *[class*="animated-text"] {
-            color: #3b82f6 !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        [data-theme="dark"] *[class*="animated-text"] {
-            color: #60a5fa !important;
-            font-weight: 700 !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-    </style>
-    
-    <!-- Script para forzar aplicación de estilos -->
-    <script>
-        // FORZAR APLICACIÓN DE ESTILOS INMEDIATAMENTE
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔧 Aplicando estilos de visibilidad forzados...');
-            
-            // Aplicar estilos a elementos específicos
-            const elements = document.querySelectorAll('.animated-text, .text-uppercase, h1, h6, .card-header span');
-            elements.forEach(function(element) {
-                if (element.textContent.includes('Sistema de Gestión') || 
-                    element.textContent.includes('Navegación') ||
-                    element.textContent.includes('Administración') ||
-                    element.textContent.includes('v3.0') ||
-                    element.textContent.includes('Carga de Archivos') ||
-                    element.textContent.includes('Gestión de Proveedores')) {
-                    
-                    element.style.color = '#3b82f6';
-                    element.style.fontWeight = '700';
-                    element.style.textShadow = '0 2px 4px rgba(0,0,0,0.2)';
-                    element.style.opacity = '1';
-                    element.style.visibility = 'visible';
-                    
-                    console.log('✅ Estilo aplicado a:', element.textContent.trim());
-                }
-            });
-            
-            // Aplicar estilos para modo oscuro
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                elements.forEach(function(element) {
-                    if (element.textContent.includes('Sistema de Gestión') || 
-                        element.textContent.includes('Navegación') ||
-                        element.textContent.includes('Administración') ||
-                        element.textContent.includes('v3.0') ||
-                        element.textContent.includes('Carga de Archivos') ||
-                        element.textContent.includes('Gestión de Proveedores')) {
-                        
-                        element.style.color = '#60a5fa';
-                        element.style.fontWeight = '700';
-                        element.style.textShadow = '0 2px 4px rgba(0,0,0,0.4)';
-                        element.style.opacity = '1';
-                        element.style.visibility = 'visible';
-                        
-                        console.log('✅ Estilo modo oscuro aplicado a:', element.textContent.trim());
-                    }
-                });
-            }
-            
-            console.log('🎯 Estilos de visibilidad aplicados correctamente');
-        });
-    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=5.1&t={{ range(1, 10000) | random }}">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏭</text></svg>">
@@ -318,7 +187,7 @@
                     </ul>
                 </div>
                 
-                <!-- Footer del sidebar - Separado del contenido principal -->
+                <!-- Footer del sidebar -->
                 <div class="sidebar-footer">
                     <div class="text-center p-3">
                         <small class="text-muted animated-text" style="color: #3b82f6 !important; font-weight: 700 !important; text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;">v3.0 - Sistema Profesional</small>
@@ -331,34 +200,34 @@
                 <!-- Contenedor centrado para el contenido -->
                 <div class="main-content-container">
                     <!-- Secciones de contenido -->
-                    <div id="section-dashboard" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-dashboard" class="section-tab stagger-animation" style="display: none;">
                         {% block dashboard %}{% endblock %}
                     </div>
-                    <div id="section-carga" class="section-tab stagger-animation">
+                    <div id="section-carga" class="section-tab stagger-animation" style="display: block;">
                         {% block carga %}{% endblock %}
                     </div>
-                    <div id="section-fabricabilidad" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-fabricabilidad" class="section-tab stagger-animation" style="display: none;">
                         {% block fabricabilidad %}{% endblock %}
                     </div>
-                    <div id="section-demanda" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-demanda" class="section-tab stagger-animation" style="display: none;">
                         {% block demanda %}{% endblock %}
                     </div>
-                    <div id="section-equilibrado" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-equilibrado" class="section-tab stagger-animation" style="display: none;">
                         {% block equilibrado %}{% endblock %}
                     </div>
-                    <div id="section-costo_total" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-costo_total" class="section-tab stagger-animation" style="display: none;">
                         {% block costo_total %}{% endblock %}
                     </div>
-                    <div id="section-costos" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-costos" class="section-tab stagger-animation" style="display: none;">
                         {% block costos %}{% endblock %}
                     </div>
-                    <div id="section-analisis" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-analisis" class="section-tab stagger-animation" style="display: none;">
                         {% block analisis %}{% endblock %}
                     </div>
-                    <div id="section-proveedores" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-proveedores" class="section-tab stagger-animation" style="display: none;">
                         {% block proveedores %}{% endblock %}
                     </div>
-                    <div id="section-admin" class="section-tab stagger-animation" style="display:none;">
+                    <div id="section-admin" class="section-tab stagger-animation" style="display: none;">
                         {% block admin %}{% endblock %}
                     </div>
                 </div>
@@ -372,6 +241,39 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}?v=8.1&force=1&t={{ range(1, 10000) | random }}"></script>
+    
+    <!-- Script para modo oscuro/claro -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            // Obtener tema guardado
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeUI(currentTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeUI(newTheme);
+            });
+            
+            function updateThemeUI(theme) {
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-moon-fill';
+                    themeText.textContent = 'Modo Oscuro';
+                } else {
+                    themeIcon.className = 'bi bi-sun-fill';
+                    themeText.textContent = 'Modo Claro';
+                }
+            }
+        });
+    </script>
 </body>
 </html> 
